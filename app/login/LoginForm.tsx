@@ -25,7 +25,7 @@ const LoginForm = () => {
               <Input
                 color="#6D42D8"
                 size="large"
-                placeholder="Enter your email"
+                placeholder="Enter email"
                 {...field}
                 prefix={
                   <MailFilled style={{ color: "#6D42D8" }} color="#6D42D8" />
@@ -49,7 +49,7 @@ const LoginForm = () => {
               <Input
                 color="#6D42D8"
                 size="large"
-                placeholder="Enter your password"
+                placeholder="Enter password"
                 {...field}
                 prefix={<LockFilled style={{ color: "#6D42D8" }} />}
               />
@@ -60,7 +60,7 @@ const LoginForm = () => {
         <div className="flex justify-between items-center">
           <Checkbox>Remember me</Checkbox>
 
-          <Link href={"/"}>Forget password ?</Link>
+          <Link href={"/forget-password"}>Forget password ?</Link>
         </div>
 
         <Button
