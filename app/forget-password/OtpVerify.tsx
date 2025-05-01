@@ -1,19 +1,19 @@
 "use client";
 
+import verifyImage from "@/public/verify.png";
 import Image from "next/image";
-import forgetPassword from "@/public/forget_password.png";
 import { LeftOutlined } from "@ant-design/icons";
 import { Button, Input } from "antd";
 import { Controller, useForm } from "react-hook-form";
-import { MailFilled } from "@ant-design/icons";
 
-const ForgetPassword = () => {
+const OtpVerify = () => {
   const { control, handleSubmit } = useForm();
+
   return (
     <div className="max-w-5xl mx-auto grid md:grid-cols-2 grid-cols-1 md:gap-10 gap-7 items-center h-screen">
       <div>
         <Image
-          src={forgetPassword}
+          src={verifyImage}
           alt="Forget password image"
           className="w-full"
         />
@@ -26,34 +26,25 @@ const ForgetPassword = () => {
           </button>
 
           <h1 className="md:text-2xl sm:text-xl text-lg font-semibold">
-            Forget Password
+            Verify
           </h1>
         </div>
         <p className="md:text-base text-sm md:mt-3 mt-2">
-          Enter the email address associated with your account. We&apos;ll send
-          you an verification code to your email.
+          We&apos;ll send to verification code to your email. Check your inbox
+          and enter the code here.
         </p>
 
         <form className="md:mt-10 mt-6 md:space-y-8 space-y-5">
           <div>
-            <label
-              className="md:text-base text-sm font-semibold pb-2 inline-block"
-              htmlFor="email"
-            >
-              Email
-            </label>
             <Controller
-              name="email"
+              name="otp"
               control={control}
               render={({ field }) => (
-                <Input
+                <Input.OTP
                   color="#6D42D8"
                   size="large"
-                  placeholder="Enter email"
+                  formatter={(str) => str.toUpperCase()}
                   {...field}
-                  prefix={
-                    <MailFilled style={{ color: "#6D42D8" }} color="#6D42D8" />
-                  }
                 />
               )}
             />
@@ -70,12 +61,18 @@ const ForgetPassword = () => {
             }}
             className="w-full"
           >
-            Get OTP
+            Verify
           </Button>
+
+          <div className="flex justify-between">
+            <p className="md:text-base text-sm">Didn&apos;t receive code?</p>
+            <button type="button" className="md:text-base text-sm cursor-pointer">Resend</button>
+          </div>
+
         </form>
       </div>
     </div>
   );
 };
 
-export default ForgetPassword;
+export default OtpVerify;

@@ -1,19 +1,18 @@
 "use client";
 
+import resetPasswordImage from "@/public/reset_password.png";
 import Image from "next/image";
-import forgetPassword from "@/public/forget_password.png";
-import { LeftOutlined } from "@ant-design/icons";
+import { LeftOutlined, LockFilled } from "@ant-design/icons";
 import { Button, Input } from "antd";
 import { Controller, useForm } from "react-hook-form";
-import { MailFilled } from "@ant-design/icons";
 
-const ForgetPassword = () => {
+const ResetPassword = () => {
   const { control, handleSubmit } = useForm();
   return (
     <div className="max-w-5xl mx-auto grid md:grid-cols-2 grid-cols-1 md:gap-10 gap-7 items-center h-screen">
       <div>
         <Image
-          src={forgetPassword}
+          src={resetPasswordImage}
           alt="Forget password image"
           className="w-full"
         />
@@ -26,34 +25,54 @@ const ForgetPassword = () => {
           </button>
 
           <h1 className="md:text-2xl sm:text-xl text-lg font-semibold">
-            Forget Password
+            Update Password
           </h1>
         </div>
         <p className="md:text-base text-sm md:mt-3 mt-2">
-          Enter the email address associated with your account. We&apos;ll send
-          you an verification code to your email.
+          We&apos;ll send to verification code to your email. Check your inbox
+          and enter the code here.
         </p>
 
         <form className="md:mt-10 mt-6 md:space-y-8 space-y-5">
           <div>
             <label
               className="md:text-base text-sm font-semibold pb-2 inline-block"
-              htmlFor="email"
+              htmlFor="new_password"
             >
-              Email
+              New Password
             </label>
             <Controller
-              name="email"
+              name="new_password"
               control={control}
               render={({ field }) => (
-                <Input
+                <Input.Password
                   color="#6D42D8"
                   size="large"
-                  placeholder="Enter email"
                   {...field}
-                  prefix={
-                    <MailFilled style={{ color: "#6D42D8" }} color="#6D42D8" />
-                  }
+                  placeholder="Enter new Password"
+                  prefix={<LockFilled style={{ color: "#6D42D8" }} />}
+                />
+              )}
+            />
+          </div>
+
+          <div>
+            <label
+              className="md:text-base text-sm font-semibold pb-2 inline-block"
+              htmlFor="confirm_password"
+            >
+              Confirm Password
+            </label>
+            <Controller
+              name="new_password"
+              control={control}
+              render={({ field }) => (
+                <Input.Password
+                  color="#6D42D8"
+                  size="large"
+                  {...field}
+                  placeholder="Enter confirm Password"
+                  prefix={<LockFilled style={{ color: "#6D42D8" }} />}
                 />
               )}
             />
@@ -70,7 +89,7 @@ const ForgetPassword = () => {
             }}
             className="w-full"
           >
-            Get OTP
+            Reset Password
           </Button>
         </form>
       </div>
@@ -78,4 +97,4 @@ const ForgetPassword = () => {
   );
 };
 
-export default ForgetPassword;
+export default ResetPassword;
