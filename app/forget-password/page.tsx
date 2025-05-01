@@ -1,34 +1,11 @@
-import Image from "next/image";
-import forgetPassword from "@/public/forget_password.png";
-import { LeftOutlined } from "@ant-design/icons";
+import ForgetPassword from "./ForgetPassword";
+
 
 const page = () => {
   return (
-    <div className="max-w-5xl mx-auto grid md:grid-cols-2 grid-cols-1 items-center h-screen">
-      <div>
-        <Image
-          src={forgetPassword}
-          alt="Forget password image"
-          className="w-full"
-        />
-      </div>
-
-      <div className="md:px-0 px-6">
-        <div className="flex ">
-          <button className="md:text-3xl text-2xl font-semibold px-2 cursor-pointer">
-            <LeftOutlined />
-          </button>
-
-          <h1 className="md:text-2xl sm:text-xl text-lg font-semibold">
-            Forget Password
-          </h1>
-        </div>
-        <p className="md:text-base text-sm md:mt-3 mt-2">
-          Enter the email address associated with your account. We&apos;ll send
-          you an verification code to your email.
-        </p>
-      </div>
-    </div>
+   <div>
+      <ForgetPassword />
+   </div>
   );
 };
 

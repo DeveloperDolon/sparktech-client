@@ -6,8 +6,8 @@ import { GoogleOutlined, LockFilled, MailFilled } from "@ant-design/icons";
 import Link from "next/link";
 
 const LoginForm = () => {
-  const { control, handleSubmit } = useForm();
-
+  
+const { control, handleSubmit } = useForm();
   return (
     <div className="mt-8">
       <form className="space-y-6">
