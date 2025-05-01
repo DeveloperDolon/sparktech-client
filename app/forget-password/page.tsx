@@ -1,7 +1,6 @@
 import Image from "next/image";
 import forgetPassword from "@/public/forget_password.png";
 import { LeftOutlined } from "@ant-design/icons";
-import { Button } from "antd";
 
 const page = () => {
   return (
