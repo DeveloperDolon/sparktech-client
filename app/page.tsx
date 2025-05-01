@@ -1,7 +1,3 @@
 export default function Home() {
-  return (
-    <div >
-      Hello world from spark tech client.
-    </div>
-  );
+  return <div>Hello world from spark tech client.</div>;
 }
