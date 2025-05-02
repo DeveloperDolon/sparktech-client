@@ -1,0 +1,13 @@
+.ant-menu-item {
+  height: 55px !important;
+  line-height: 48px !important;
+  border-radius: 15px !important;
+  width: fit-content !important;
+  padding: 15px 8px 15px 18px !important;
+}
+
+.ant-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
