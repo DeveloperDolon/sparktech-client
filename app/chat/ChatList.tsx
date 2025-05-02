@@ -27,7 +27,7 @@ const ChatList = () => {
     if (!isDragging || !sliderRef.current) return;
     e.preventDefault();
     const x = e.pageX - sliderRef.current.offsetLeft;
-    const walk = (x - startX) * 2; 
+    const walk = (x - startX) * 2;
     sliderRef.current.scrollLeft = scrollLeft - walk;
   };
 
@@ -59,9 +59,14 @@ const ChatList = () => {
         >
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
             <div key={item} className="flex-shrink-0">
-              <Badge dot style={{height: "10px", width: "10px"}} color="green" offset={[-5, 50]}>
+              <Badge
+                dot
+                style={{ height: "10px", width: "10px" }}
+                color="green"
+                offset={[-5, 50]}
+              >
                 <Avatar
-                  size={60}
+                  size={55}
                   icon={<UserOutlined />}
                   className="hover:scale-105 transition-transform"
                 />
@@ -77,8 +82,32 @@ const ChatList = () => {
           }
         `}</style>
       </div>
+
+      <div className="mt-7">
+        <h2 className="text-xl font-semibold ">Messages</h2>
+
+        <div className="md:mt-5">
+          <div className="">
+            <Badge
+              dot
+              style={{ height: "10px", width: "10px" }}
+              color="green"
+              offset={[-5, 50]}
+            >
+              <Avatar
+                size={55}
+                icon={<UserOutlined />}
+                className="hover:scale-105 transition-transform"
+              />
+            </Badge>
+
+            <div>
+                
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
-
 export default ChatList;
