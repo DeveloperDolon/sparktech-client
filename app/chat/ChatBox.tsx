@@ -77,16 +77,30 @@ const ChatBox = () => {
             placeholder="Write a message..."
             prefix={
               <div>
-                <Button type="text" style={{fontSize: "20px"}} icon={<PaperClipOutlined />} />
-                <Button type="text" style={{fontSize: "20px"}} icon={<SmileOutlined />} />
+                <Button
+                  type="text"
+                  style={{ fontSize: "20px" }}
+                  icon={<PaperClipOutlined />}
+                />
+                <Button
+                  type="text"
+                  style={{ fontSize: "20px" }}
+                  icon={<SmileOutlined />}
+                />
               </div>
             }
-            suffix={<Button htmlType="submit" type="text" style={{fontSize: "20px"}} icon={<SendOutlined />} />}
-            
+            suffix={
+              <Button
+                htmlType="submit"
+                type="text"
+                style={{ fontSize: "20px" }}
+                icon={<SendOutlined />}
+              />
+            }
             style={{
               borderRadius: "20px",
               padding: "8px 16px",
-              border: "none"
+              border: "none",
             }}
           />
         </form>
