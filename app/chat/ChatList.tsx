@@ -1,5 +1,5 @@
 import { Avatar, Badge, Input } from "antd";
-import { SearchOutlined, UserOutlined } from "@ant-design/icons";
+import { CheckOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { useRef, useState } from "react";
 
 const ChatList = () => {
@@ -86,8 +86,8 @@ const ChatList = () => {
       <div className="mt-7">
         <h2 className="text-xl font-semibold ">Messages</h2>
 
-        <div className="md:mt-5">
-          <div className="">
+        <div className="mt-5 w-full space-y-8">
+          <div className="flex gap-4 cursor-pointer">
             <Badge
               dot
               style={{ height: "10px", width: "10px" }}
@@ -102,8 +102,45 @@ const ChatList = () => {
             </Badge>
 
             <div>
-                
+              <h4 className="text-lg font-semibold">Jason Susanto</h4>
+              <div className={`flex gap-3 items-center`}>
+                <div className="relative text-[#F1674A]">
+                  <CheckOutlined />
+                  <CheckOutlined className="absolute top-0.5 left-1" />
+                </div>
+
+                <p className="text-sm">Im from Bangladesh.</p>
+              </div>
             </div>
+            <p className="text-sm ml-auto">10:42 PM</p>
+          </div>
+
+          <div className="flex gap-4 cursor-pointer">
+            <Badge
+              dot
+              style={{ height: "10px", width: "10px" }}
+              color="green"
+              offset={[-5, 50]}
+            >
+              <Avatar
+                size={55}
+                icon={<UserOutlined />}
+                className="hover:scale-105 transition-transform"
+              />
+            </Badge>
+
+            <div>
+              <h4 className="text-lg font-semibold">Jason Susanto</h4>
+              <div className={`flex gap-3 items-center`}>
+                <div className="relative text-[#F1674A]">
+                  <CheckOutlined />
+                  <CheckOutlined className="absolute top-0.5 left-1" />
+                </div>
+
+                <p className="text-sm">Im from Bangladesh.</p>
+              </div>
+            </div>
+            <p className="text-sm ml-auto">10:42 PM</p>
           </div>
         </div>
       </div>
