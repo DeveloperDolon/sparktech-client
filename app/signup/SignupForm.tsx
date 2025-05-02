@@ -10,9 +10,16 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 
+export interface TUser {
+    name: string;
+    email: string;
+    password: string;
+}
+
 const SignupForm = () => {
-  const { control, handleSubmit } = useForm();
-  const onSubmit = (data) => {
+  const { control, handleSubmit } = useForm<TUser>();
+  
+  const onSubmit = (data: TUser) => {
     console.log(data);
   };
   return (
