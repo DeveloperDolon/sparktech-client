@@ -2,10 +2,10 @@
 
 import React from "react";
 import {
-  MessageFilled,
+  MessageOutlined,
   UsergroupAddOutlined,
-  VideoCameraFilled,
-  PhoneFilled,
+  VideoCameraOutlined,
+  PhoneOutlined,
   CalendarOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
@@ -36,7 +36,7 @@ const items: MenuItem[] = [
   getItem(
     "",
     "1",
-    <MessageFilled
+    <MessageOutlined
       style={{
         color: "#6D42D8",
         fontSize: "24px",
@@ -56,7 +56,7 @@ const items: MenuItem[] = [
   getItem(
     "",
     "9",
-    <VideoCameraFilled
+    <VideoCameraOutlined
       style={{
         color: "#6D42D8",
         fontSize: "24px",
@@ -66,7 +66,7 @@ const items: MenuItem[] = [
   getItem(
     "",
     "3",
-    <PhoneFilled
+    <PhoneOutlined
       style={{
         color: "#6D42D8",
         fontSize: "24px",
