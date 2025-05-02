@@ -1,5 +1,10 @@
-import { Avatar, Badge, Button } from "antd";
+import { Avatar, Badge, Button, Input } from "antd";
 import { Header } from "antd/es/layout/layout";
+import {
+  SendOutlined,
+  PaperClipOutlined,
+  SmileOutlined,
+} from "@ant-design/icons";
 import {
   UserOutlined,
   VideoCameraOutlined,
@@ -9,7 +14,7 @@ import {
 
 const ChatBox = () => {
   return (
-    <div>
+    <div className="h-[calc(100vh-125px)]">
       <Header
         style={{
           background: "white",
@@ -43,26 +48,49 @@ const ChatBox = () => {
             <Button
               size="large"
               variant="text"
-              style={{ border: "none", fontSize:"25px" }}
+              style={{ border: "none", fontSize: "25px" }}
               icon={<VideoCameraOutlined />}
             />
 
             <Button
               size="large"
               variant="text"
-              style={{ border: "none", fontSize:"25px" }}
+              style={{ border: "none", fontSize: "25px" }}
               icon={<PhoneOutlined />}
             />
 
             <Button
               size="large"
               variant="text"
-              style={{ border: "none", fontSize:"25px" }}
+              style={{ border: "none", fontSize: "25px" }}
               icon={<DashOutlined />}
             />
           </div>
         </div>
       </Header>
+
+      <div className="flex flex-col h-full ">
+        <div className="flex-1/2 px-[20px]">asdfasdfasd asdfsadf</div>
+
+        <form className=" w-full place-self-end bg-white py-6 px-[20px]">
+          <Input
+            placeholder="Write a message..."
+            prefix={
+              <div>
+                <Button type="text" style={{fontSize: "20px"}} icon={<PaperClipOutlined />} />
+                <Button type="text" style={{fontSize: "20px"}} icon={<SmileOutlined />} />
+              </div>
+            }
+            suffix={<Button htmlType="submit" type="text" style={{fontSize: "20px"}} icon={<SendOutlined />} />}
+            
+            style={{
+              borderRadius: "20px",
+              padding: "8px 16px",
+              border: "none"
+            }}
+          />
+        </form>
+      </div>
     </div>
   );
 };
