@@ -2,9 +2,11 @@
 
 import React from "react";
 import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
+  MessageFilled,
+  UsergroupAddOutlined,
+  VideoCameraFilled,
+  PhoneFilled,
+  CalendarOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
@@ -34,30 +36,50 @@ const items: MenuItem[] = [
   getItem(
     "",
     "1",
-    <PieChartOutlined
+    <MessageFilled
       style={{
         color: "#6D42D8",
-        fontSize: "24px", 
+        fontSize: "24px",
       }}
     />
   ),
   getItem(
     "",
     "2",
-    <DesktopOutlined
+    <UsergroupAddOutlined
       style={{
         color: "#6D42D8",
-        fontSize: "24px", 
+        fontSize: "24px",
       }}
     />
   ),
   getItem(
     "",
     "9",
-    <FileOutlined
+    <VideoCameraFilled
       style={{
         color: "#6D42D8",
-        fontSize: "24px", 
+        fontSize: "24px",
+      }}
+    />
+  ),
+  getItem(
+    "",
+    "3",
+    <PhoneFilled
+      style={{
+        color: "#6D42D8",
+        fontSize: "24px",
+      }}
+    />
+  ),
+  getItem(
+    "",
+    "4",
+    <CalendarOutlined
+      style={{
+        color: "#6D42D8",
+        fontSize: "24px",
       }}
     />
   ),
