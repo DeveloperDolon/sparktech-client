@@ -40,7 +40,6 @@ const SignupForm = () => {
       };
 
       const result = await signup(formattedData);
-      console.log(result);
 
       if (result?.data) {
         messageApi.open({

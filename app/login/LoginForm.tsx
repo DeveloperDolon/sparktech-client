@@ -1,16 +1,56 @@
 "use client";
 
-import { Button, Checkbox, Input } from "antd";
+import { Button, Checkbox, Input, message } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { GoogleOutlined, LockFilled, MailFilled } from "@ant-design/icons";
 import Link from "next/link";
+import { TLoginUser } from "../types";
+import { useLoginMutation } from "../store/api/auth.api";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
-  
-const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, reset } = useForm<TLoginUser>();
+  const router = useRouter();
+  const [login] = useLoginMutation();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const onSubmit = async (data: TLoginUser) => {
+    try {
+      const key = "signup";
+      messageApi.open({
+        key,
+        type: "loading",
+        content: "Logging user...",
+      });
+      const result = await login(data);
+      console.log(result);
+
+      if (result?.data) {
+        messageApi.open({
+          key,
+          type: "success",
+          content: "Logged in successful!",
+        });
+        reset();
+        router.push("/chat");
+      } else if (result?.error && "data" in result.error) {
+        const errorData = result.error.data as { message: string };
+        messageApi.open({ key, type: "error", content: errorData.message });
+      } else {
+        messageApi.open({
+          key,
+          type: "error",
+          content: "An unexpected error occurred.",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="mt-8">
-      <form className="space-y-6">
+      {contextHolder}
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label
             className="md:text-base text-sm font-semibold pb-2 inline-block"
@@ -46,7 +86,7 @@ const { control, handleSubmit } = useForm();
             name="password"
             control={control}
             render={({ field }) => (
-              <Input
+              <Input.Password
                 color="#6D42D8"
                 size="large"
                 placeholder="Enter password"
@@ -64,6 +104,7 @@ const { control, handleSubmit } = useForm();
         </div>
 
         <Button
+          htmlType="submit"
           variant="filled"
           size="large"
           style={{
@@ -87,10 +128,13 @@ const { control, handleSubmit } = useForm();
             borderRadius: "100px",
           }}
           className="w-full"
-          icon={<GoogleOutlined/>}
+          icon={<GoogleOutlined />}
         >
           Google
         </Button>
+        <p className="md:text-base text-sm font-light text-center">
+          Or <Link href={"/signup"} className="font-semibold">register</Link> an account.
+        </p>
       </form>
     </div>
   );
