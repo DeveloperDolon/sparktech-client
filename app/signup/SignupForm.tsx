@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Checkbox, Input } from "antd";
+import { Button, Checkbox, Input, message } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import {
   GoogleOutlined,
@@ -9,21 +9,64 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
+import { useSignupMutation } from "../store/api/auth.api";
+import { useRouter } from "next/navigation";
 
 export interface TUser {
-    name: string;
-    email: string;
-    password: string;
+  name: string;
+  email: string;
+  password: string;
 }
 
 const SignupForm = () => {
-  const { control, handleSubmit } = useForm<TUser>();
-  
-  const onSubmit = (data: TUser) => {
-    console.log(data);
+  const [messageApi, contextHolder] = message.useMessage();
+  const { control, handleSubmit, reset } = useForm<TUser>();
+  const [signup] = useSignupMutation();
+  const router = useRouter();
+  const onSubmit = async (data: TUser) => {
+    try {
+      const key = "signup";
+      messageApi.open({
+        key,
+        type: "loading",
+        content: "User data registering...",
+      });
+      const formattedData = {
+        password: data?.password,
+        user: {
+          email: data?.email,
+          name: data?.name,
+        },
+      };
+
+      const result = await signup(formattedData);
+      console.log(result);
+
+      if (result?.data) {
+        messageApi.open({
+          key,
+          type: "success",
+          content: "Register complete!",
+        });
+        reset();
+        router.push("/login");
+      } else if (result?.error && "data" in result.error) {
+        const errorData = result.error.data as { message: string };
+        messageApi.open({ key, type: "error", content: errorData.message });
+      } else {
+        messageApi.open({
+          key,
+          type: "error",
+          content: "An unexpected error occurred.",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <div className="mt-8">
+      {contextHolder}
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label
