@@ -4,6 +4,7 @@ import { Layout } from "antd";
 import { Content } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import ChatList from "./ChatList";
+import ChatBox from "./ChatBox";
 
 const page = () => {
   return (
@@ -12,7 +13,9 @@ const page = () => {
         <ChatList />
       </Sider>
 
-      <Content>Content</Content>
+      <Content>
+        <ChatBox />
+      </Content>
 
       <Sider theme="light" width="20%">Sider</Sider>
     </Layout>
