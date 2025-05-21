@@ -9,6 +9,7 @@ import { MailFilled } from "@ant-design/icons";
 
 const ForgetPassword = () => {
   const { control, handleSubmit } = useForm();
+  
   return (
     <div className="max-w-5xl mx-auto grid md:grid-cols-2 grid-cols-1 md:gap-10 gap-7 items-center h-screen">
       <div>
