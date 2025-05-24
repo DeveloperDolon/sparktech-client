@@ -12,25 +12,20 @@ import {
   DashOutlined,
 } from "@ant-design/icons";
 import { io } from "socket.io-client";
+import { useEffect } from "react";
 
 const ChatBox = () => {
   const socket = io("http://localhost:3005");
 
-  const user = {
-    id: "1",
-    name: "Jason Susanto",
-    image: "https://i.pravatar.cc/150?img=3",
-  };
+  function connectSocket() {
+    socket.on("connection", (socket) => {
+      console.log(socket);
+    });
+  }
 
-  socket.on("connect", () => {
-    console.log("Connected to socket");
-  });
-
-  socket.on("message", (data) => {
-    console.log(data);
-
-    socket.emit("message", "hello from client");
-  });
+  useEffect(() => {
+    connectSocket();
+  }, []);
 
   return (
     <div className="h-[calc(100vh-125px)]">
