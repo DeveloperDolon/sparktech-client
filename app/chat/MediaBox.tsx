@@ -1,5 +1,5 @@
 import { Content } from "antd/es/layout/layout";
-import { RightOutlined } from "@ant-design/icons";
+import { RightOutlined, FileExcelFilled } from "@ant-design/icons";
 import { Button, Image } from "antd";
 
 const MediaBox = () => {
@@ -120,6 +120,56 @@ const MediaBox = () => {
             >
               View Messages <RightOutlined color="gray" />
             </Button>
+          </div>
+        </div>
+      </Content>
+
+      <Content
+        style={{
+          background: "white",
+          padding: "30px 20px",
+          height: "fit-content",
+        }}
+      >
+        <div className="flex justify-between">
+          <div className="flex gap-3.5 items-end">
+            <h4 className="text-lg font-semibold">Files</h4>
+            <p className="text-sm text-gray-500">38</p>
+          </div>
+          <Button type="text">
+            View All <RightOutlined />
+          </Button>
+        </div>
+
+        <div>
+          <div className="flex gap-5 items-center mt-5">
+            <button className="px-3 py-2 rounded-lg bg-[#F6F6FA]">
+              <FileExcelFilled style={{ fontSize: 30 }} />
+            </button>
+
+            <div>
+              <h3 className="text-xl font-semibold">Video_02-24-22.mp4</h3>
+
+              <div className="flex gap-5 mt-2">
+                <p className="text-sm text-gray-500">2.5 MB</p>
+                <p className="text-sm text-gray-500">06 Feb 2022</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-5 items-center mt-5">
+            <button className="px-3 py-2 rounded-lg bg-[#F6F6FA]">
+              <FileExcelFilled style={{ fontSize: 30 }} />
+            </button>
+
+            <div>
+              <h3 className="text-xl font-semibold">Video_02-24-22.mp4</h3>
+
+              <div className="flex gap-5 mt-2">
+                <p className="text-sm text-gray-500">2.5 MB</p>
+                <p className="text-sm text-gray-500">06 Feb 2022</p>
+              </div>
+            </div>
           </div>
         </div>
       </Content>
