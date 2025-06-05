@@ -63,6 +63,65 @@ const MediaBox = () => {
             View All <RightOutlined />
           </Button>
         </div>
+
+        <div>
+          <div className="border border-gray-300 rounded-lg mt-5">
+            <div className="flex gap-5 p-4">
+              <img
+                src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
+                alt="link image"
+                className="h-[50px] w-[50px] rounded-lg hover:scale-105 transition-transform cursor-pointer object-cover"
+              />
+
+              <p className="text-sm break-all overflow-hidden">
+                https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png
+              </p>
+            </div>
+
+            <Button
+              type="text"
+              size="large"
+              style={{
+                borderTop: "1px solid #D1D5DB", // Tailwind's border-gray-300 hex value
+                borderRadius: "0px",
+                padding: "4px",
+                color: "#6D42D8",
+                fontWeight: "600",
+              }}
+              className="text-base font-semibold w-full p-4 border-t"
+            >
+              View Messages <RightOutlined color="gray" />
+            </Button>
+          </div>
+          <div className="border border-gray-300 rounded-lg mt-5">
+            <div className="flex gap-5 p-4 ">
+              <img
+                src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
+                alt="link image"
+                className="h-[50px] w-[50px] rounded-lg hover:scale-105 transition-transform cursor-pointer object-cover"
+              />
+
+              <p className="text-sm break-all overflow-hidden">
+                https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png
+              </p>
+            </div>
+
+            <Button
+              type="text"
+              size="large"
+              style={{
+                borderTop: "1px solid #D1D5DB", // Tailwind's border-gray-300 hex value
+                borderRadius: "0px",
+                padding: "4px",
+                color: "#6D42D8",
+                fontWeight: "600",
+              }}
+              className="text-base font-semibold w-full p-4 border-t"
+            >
+              View Messages <RightOutlined color="gray" />
+            </Button>
+          </div>
+        </div>
       </Content>
     </div>
   );
