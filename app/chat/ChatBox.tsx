@@ -99,15 +99,13 @@ const ChatBox = () => {
 
             <div className="flex gap-5 items-start justify-end">
               <div className="bg-blue-500 p-3 rounded-lg max-w-[70%]">
-                <p className="text-sm text-white font-semibold">I&apos;m good, thanks! And you?</p>
+                <p className="text-sm text-white font-semibold">I&apos;m good, thanks! And you? The quick fox jump over the lazy dog wshnb.</p>
               </div>
               <Avatar
                 size={40}
                 icon={<UserOutlined />}
               />
             </div>
-
-            {/* Add more messages as needed */}
           </div>
 
         </div>
