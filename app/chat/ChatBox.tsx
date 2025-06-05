@@ -83,8 +83,34 @@ const ChatBox = () => {
         </div>
       </Header>
 
-      <div className="flex flex-col h-full ">
-        <div className="flex-1/2 px-[20px]">asdfasdfasd asdfsadf</div>
+      <div className="flex flex-col h-full mt-5">
+        <div className="flex-1/2 px-[20px] h-full">
+        
+          <div className="flex flex-col gap-4 h-full overflow-y-auto">
+            <div className="flex gap-5 items-start">
+              <Avatar
+                size={40}
+                icon={<UserOutlined />}
+              />
+              <div className="bg-[#E0E0E0] p-3 rounded-lg max-w-[70%]">
+                <p className="text-sm font-semibold">Hello, how are you?</p>
+              </div>
+            </div>
+
+            <div className="flex gap-5 items-start justify-end">
+              <div className="bg-blue-500 p-3 rounded-lg max-w-[70%]">
+                <p className="text-sm text-white font-semibold">I&apos;m good, thanks! And you?</p>
+              </div>
+              <Avatar
+                size={40}
+                icon={<UserOutlined />}
+              />
+            </div>
+
+            {/* Add more messages as needed */}
+          </div>
+
+        </div>
 
         <form className=" w-full place-self-end bg-white py-6 px-[20px]">
           <Input
