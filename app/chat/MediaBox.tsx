@@ -148,7 +148,7 @@ const MediaBox = () => {
             </button>
 
             <div>
-              <h3 className="text-xl font-semibold">Video_02-24-22.mp4</h3>
+              <h3 className="text-lg font-semibold">Video_02-24-22.mp4</h3>
 
               <div className="flex gap-5 mt-2">
                 <p className="text-sm text-gray-500">2.5 MB</p>
@@ -163,7 +163,7 @@ const MediaBox = () => {
             </button>
 
             <div>
-              <h3 className="text-xl font-semibold">Video_02-24-22.mp4</h3>
+              <h3 className="text-lg font-semibold">Video_02-24-22.mp4</h3>
 
               <div className="flex gap-5 mt-2">
                 <p className="text-sm text-gray-500">2.5 MB</p>
