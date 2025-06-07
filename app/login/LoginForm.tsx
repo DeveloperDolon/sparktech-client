@@ -23,7 +23,6 @@ const LoginForm = () => {
         content: "Logging user...",
       });
       const result = await login(data);
-      console.log(result);
 
       if (result?.data) {
         messageApi.open({
