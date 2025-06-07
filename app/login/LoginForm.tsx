@@ -30,6 +30,7 @@ const LoginForm = () => {
           type: "success",
           content: "Logged in successful!",
         });
+        localStorage.setItem("accessToken", result?.data?.data?.accessToken);
         reset();
         router.push("/chat");
       } else if (result?.error && "data" in result.error) {

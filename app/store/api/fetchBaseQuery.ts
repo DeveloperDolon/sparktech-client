@@ -3,7 +3,7 @@ import { BaseQueryApi, FetchArgs, fetchBaseQuery } from "@reduxjs/toolkit/query"
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL,
   prepareHeaders: (headers) => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+    const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }
@@ -27,9 +27,7 @@ export const baseQueryWithAuth = async (
     (result?.error?.data as { message?: string })?.message === "invalid token"
   ) {
     console.log("Access token expired or invalid. Logging out...");
-
-    localStorage.removeItem("authToken");
-
+    localStorage.removeItem("accessToken");
     window.location.href = "/login";
   }
 

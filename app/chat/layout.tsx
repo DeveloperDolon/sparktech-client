@@ -13,6 +13,7 @@ import { Layout, Menu } from "antd";
 import logoImage from "@/public/logo.png";
 import Image from "next/image";
 import "./style.css";
+import { useMeQuery } from "../store/api/auth.api";
 
 const {Sider } = Layout;
 
@@ -90,6 +91,10 @@ const ChatLayout = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+
+  const {data, isLoading} = useMeQuery(1);
+
+  console.log("User Data:", data, isLoading);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
