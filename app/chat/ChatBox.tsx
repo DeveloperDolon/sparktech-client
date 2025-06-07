@@ -13,6 +13,8 @@ import {
 } from "@ant-design/icons";
 import { io } from "socket.io-client";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement & {
@@ -21,9 +23,12 @@ interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
 }
 
 const ChatBox = () => {
+
+  const user = useSelector((state: RootState) => state.auth.user);
+  
   const socket = io("http://localhost:3005", {
     query: {
-      userId: "12345",
+      userId: user?.id,
     },
   });
 
@@ -42,6 +47,7 @@ const ChatBox = () => {
   };
 
   useEffect(() => {
+
     socket.on("connect", () => {
       console.log("Connected to server");
       socket.emit("message", "Hello from client!");

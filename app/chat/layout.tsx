@@ -14,7 +14,8 @@ import logoImage from "@/public/logo.png";
 import Image from "next/image";
 import "./style.css";
 import { useMeQuery } from "../store/api/auth.api";
-import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/features/authSlice";
 
 const { Sider } = Layout;
 
@@ -93,7 +94,13 @@ const ChatLayout = ({
   children: React.ReactNode;
 }>) => {
   const { data, isLoading } = useMeQuery(1);
-  const route = useRouter();
+  const dispatch = useDispatch();
+
+  console.log(data, isLoading);
+
+  if (!isLoading && data?.data?.id) {
+    dispatch(setUser(data?.data));
+  }
 
   if (isLoading) {
     return (
@@ -118,10 +125,6 @@ const ChatLayout = ({
         </Layout.Content>
       </Layout>
     );
-  }
-  
-  if (!data?.data?.id) {
-    route.push("/login");
   }
 
   return (
