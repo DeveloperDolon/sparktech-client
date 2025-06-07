@@ -119,7 +119,7 @@ const ChatLayout = ({
       </Layout>
     );
   }
-  console.log(data)
+  
   if (!data?.data?.id) {
     route.push("/login");
   }

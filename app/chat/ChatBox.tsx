@@ -36,8 +36,6 @@ const ChatBox = () => {
         socket.emit("message", { text: message });
         data.target.message.value = "";
       }
-
-      socket.emit("message", data.target.message.value);
     } catch (error) {
       console.error("Error sending message:", error);
     }
