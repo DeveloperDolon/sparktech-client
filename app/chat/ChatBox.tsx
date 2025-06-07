@@ -14,18 +14,53 @@ import {
 import { io } from "socket.io-client";
 import { useEffect } from "react";
 
-const ChatBox = () => {
-  const socket = io("http://localhost:3005");
+interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
+  target: HTMLFormElement & {
+    message: { value: string };
+  };
+}
 
-  function connectSocket() {
-    socket.on("connection", (socket) => {
-      console.log(socket);
-    });
-  }
+const ChatBox = () => {
+  const socket = io("http://localhost:3005", {
+    query: {
+      userId: "12345",
+    },
+  });
+
+  const handleSendMessage = async (data: SendMessageEvent): Promise<void> => {
+    try {
+      data.preventDefault();
+      const message = data.target.message.value.trim();
+
+      if (message) {
+        socket.emit("message", { text: message });
+        data.target.message.value = "";
+      }
+
+      socket.emit("message", data.target.message.value);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
 
   useEffect(() => {
-    connectSocket();
-  }, []);
+    socket.on("connect", () => {
+      console.log("Connected to server");
+      socket.emit("message", "Hello from client!");
+    });
+
+    socket.on("message", (data: unknown) => {
+      console.log("New message received:", data);
+    });
+
+    socket.on("getOnlineUsers", (data: unknown) => {
+      console.log("Online users:", data);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
 
   return (
     <div className="h-[calc(100vh-125px)]">
@@ -85,13 +120,9 @@ const ChatBox = () => {
 
       <div className="flex flex-col h-full mt-5">
         <div className="flex-1/2 px-[20px] h-full">
-        
           <div className="flex flex-col gap-4 h-full overflow-y-auto">
             <div className="flex gap-5 items-start">
-              <Avatar
-                size={40}
-                icon={<UserOutlined />}
-              />
+              <Avatar size={40} icon={<UserOutlined />} />
               <div className="bg-[#E0E0E0] p-3 rounded-lg max-w-[70%]">
                 <p className="text-sm font-semibold">Hello, how are you?</p>
               </div>
@@ -99,19 +130,22 @@ const ChatBox = () => {
 
             <div className="flex gap-5 items-start justify-end">
               <div className="bg-blue-500 p-3 rounded-lg max-w-[70%]">
-                <p className="text-sm text-white font-semibold">I&apos;m good, thanks! And you? The quick fox jump over the lazy dog wshnb.</p>
+                <p className="text-sm text-white font-semibold">
+                  I&apos;m good, thanks! And you? The quick fox jump over the
+                  lazy dog wshnb.
+                </p>
               </div>
-              <Avatar
-                size={40}
-                icon={<UserOutlined />}
-              />
+              <Avatar size={40} icon={<UserOutlined />} />
             </div>
           </div>
-
         </div>
 
-        <form className=" w-full place-self-end bg-white py-6 px-[20px]">
+        <form
+          onSubmit={handleSendMessage}
+          className=" w-full place-self-end bg-white py-6 px-[20px]"
+        >
           <Input
+            name="message"
             placeholder="Write a message..."
             prefix={
               <div>
