@@ -1,3 +1,4 @@
+import { TUser } from "@/app/signup/SignupForm";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface AuthState {
@@ -10,6 +11,7 @@ export interface AuthState {
   token: string | null;
   loading: boolean;
   error: string | null;
+  onlineUsers?: TUser[]; 
 }
 
 const initialState: AuthState = {
@@ -24,10 +26,6 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    loginStart(state) {
-      state.loading = true;
-      state.error = null;
-    },
     setUser(
       state,
       action: PayloadAction<AuthState["user"]>
@@ -51,9 +49,12 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    onlineUsers(state, action: PayloadAction<TUser[]>) {
+      state.onlineUsers = action.payload;
+    }
   },
 });
 
-export const { loginStart, setUser, loginFailure, logout } =
+export const { setUser, loginFailure, logout, onlineUsers } =
   authSlice.actions;
 export default authSlice;
