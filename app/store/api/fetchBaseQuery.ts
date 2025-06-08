@@ -23,9 +23,9 @@ export const baseQueryWithAuth = async (
   extraOptions: object
 ) => {
   const result = await baseQuery(args, api, extraOptions);
-
+  
   if (
-    (result?.error?.data as { message?: string })?.message === "invalid token"
+    result?.error?.data === "Unauthorized"
   ) {
     console.log("Access token expired or invalid. Logging out...");
     localStorage.removeItem("accessToken");

@@ -39,6 +39,7 @@ const ChatBox = () => {
 
       if (message) {
         socket.emit("message", { text: message });
+
         data.target.message.value = "";
       }
     } catch (error) {
@@ -47,7 +48,6 @@ const ChatBox = () => {
   };
 
   useEffect(() => {
-
     socket.on("connect", () => {
       console.log("Connected to server");
       socket.emit("message", "Hello from client!");
@@ -64,7 +64,7 @@ const ChatBox = () => {
     return () => {
       socket.disconnect();
     };
-  }, [socket]);
+  });
 
   return (
     <div className="h-[calc(100vh-125px)]">

@@ -96,8 +96,6 @@ const ChatLayout = ({
   const { data, isLoading } = useMeQuery(1);
   const dispatch = useDispatch();
 
-  console.log(data, isLoading);
-
   if (!isLoading && data?.data?.id) {
     dispatch(setUser(data?.data));
   }
