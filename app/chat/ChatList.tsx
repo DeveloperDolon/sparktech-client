@@ -1,12 +1,16 @@
 import { Avatar, Badge, Input } from "antd";
 import { CheckOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { TUser } from "../signup/SignupForm";
 
 const ChatList = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const users = useSelector((state: RootState) => state.auth.onlineUsers);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!sliderRef.current) return;
@@ -57,8 +61,8 @@ const ChatList = () => {
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
         >
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
-            <div key={item} className="flex-shrink-0">
+          {users?.map((user: TUser) => (
+            <div key={user?.id} className="flex-shrink-0">
               <Badge
                 dot
                 style={{ height: "10px", width: "10px" }}
@@ -71,7 +75,7 @@ const ChatList = () => {
                   className="hover:scale-105 transition-transform"
                 />
               </Badge>
-              <p className="text-sm mt-3 font-poppins">Hello world</p>
+              <p className="text-sm mt-3 font-poppins">{user?.name}</p>
             </div>
           ))}
         </div>

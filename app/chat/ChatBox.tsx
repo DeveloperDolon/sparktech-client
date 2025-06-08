@@ -13,8 +13,10 @@ import {
 } from "@ant-design/icons";
 import { io, Socket } from "socket.io-client";
 import { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import { onlineUsers } from "../store/features/authSlice";
+import { TUser } from "../signup/SignupForm";
 
 interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement & {
@@ -25,6 +27,7 @@ interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
 const ChatBox = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const socketRef = useRef<Socket | null>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (user?.id && !socketRef.current) {
@@ -42,7 +45,8 @@ const ChatBox = () => {
         console.log("New message received:", data);
       });
 
-      socketRef.current.on("getOnlineUsers", (data: unknown) => {
+      socketRef.current.on("getOnlineUsers", (data: { users: TUser[] }) => {
+        dispatch(onlineUsers(data?.users));
         console.log("Online users:", data);
       });
     }

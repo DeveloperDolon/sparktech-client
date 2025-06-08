@@ -13,9 +13,12 @@ import { useSignupMutation } from "../store/api/auth.api";
 import { useRouter } from "next/navigation";
 
 export interface TUser {
+  id?: string;
   name: string;
   email: string;
   password: string;
+  status?: "online" | "offline" | "away" | "busy";
+  lastActive?: Date;
 }
 
 const SignupForm = () => {
