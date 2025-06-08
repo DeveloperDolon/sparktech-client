@@ -11,8 +11,8 @@ import {
   PhoneOutlined,
   DashOutlined,
 } from "@ant-design/icons";
-import { io } from "socket.io-client";
-import { useEffect } from "react";
+import { io, Socket } from "socket.io-client";
+import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 
@@ -23,48 +23,51 @@ interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
 }
 
 const ChatBox = () => {
-
   const user = useSelector((state: RootState) => state.auth.user);
-  
-  const socket = io("http://localhost:3005", {
-    query: {
-      userId: user?.id,
-    },
-  });
+  const socketRef = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    if (user?.id && !socketRef.current) {
+      socketRef.current = io("http://localhost:3005", {
+        query: {
+          userId: user.id,
+        },
+      });
+
+      socketRef.current.on("connect", () => {
+        console.log("Connected to server");
+      });
+
+      socketRef.current.on("message", (data: unknown) => {
+        console.log("New message received:", data);
+      });
+
+      socketRef.current.on("getOnlineUsers", (data: unknown) => {
+        console.log("Online users:", data);
+      });
+    }
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
+  }, [user?.id]);
 
   const handleSendMessage = async (data: SendMessageEvent): Promise<void> => {
     try {
       data.preventDefault();
       const message = data.target.message.value.trim();
 
-      if (message) {
-        socket.emit("message", { text: message });
-
+      if (message && socketRef.current) {
+        socketRef.current.emit("message", { text: message });
         data.target.message.value = "";
       }
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
-
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected to server");
-      socket.emit("message", "Hello from client!");
-    });
-
-    socket.on("message", (data: unknown) => {
-      console.log("New message received:", data);
-    });
-
-    socket.on("getOnlineUsers", (data: unknown) => {
-      console.log("Online users:", data);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  });
 
   return (
     <div className="h-[calc(100vh-125px)]">
