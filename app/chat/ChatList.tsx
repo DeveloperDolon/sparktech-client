@@ -1,9 +1,12 @@
 import { Avatar, Badge, Input } from "antd";
 import { CheckOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { TUser } from "../signup/SignupForm";
+import { useCreateChatroomMutation } from "../store/api/chatroom.api";
+import { TChatRoom } from "../types";
+import { setUserChat } from "../store/features/chatSlice";
 
 const ChatList = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -11,6 +14,8 @@ const ChatList = () => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const users = useSelector((state: RootState) => state.auth.onlineUsers);
+  const [createChatroom] = useCreateChatroomMutation();
+  const dispatch = useDispatch();
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!sliderRef.current) return;
@@ -35,15 +40,15 @@ const ChatList = () => {
     sliderRef.current.scrollLeft = scrollLeft - walk;
   };
 
-  const setChatRoom = async (userId: string) => {
-    try{
+  const handleChatRoom = async (userId: string) => {
+    try {
+      const result: {data: TChatRoom} = await createChatroom({ userId }).unwrap();
 
-      
-
+      dispatch(setUserChat(result?.data));
     } catch (err) {
       console.log(err);
     }
-  }
+  };
   return (
     <div className="h-screen px-10 pt-12 border-l border-gray-200">
       <h1 className="md:text-4xl sm:text-3xl text-2xl font-semibold">Chat</h1>
@@ -71,7 +76,11 @@ const ChatList = () => {
           onMouseMove={handleMouseMove}
         >
           {users?.map((user: TUser) => (
-            <div onClick={() => setChatRoom(user?.id as string)} key={user?.id} className="flex-shrink-0 ">
+            <div
+              onClick={() => handleChatRoom(user?.id as string)}
+              key={user?.id}
+              className="flex-shrink-0 "
+            >
               <div className="flex justify-center">
                 <Badge
                   dot
