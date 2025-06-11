@@ -62,19 +62,21 @@ const ChatList = () => {
           onMouseMove={handleMouseMove}
         >
           {users?.map((user: TUser) => (
-            <div key={user?.id} className="flex-shrink-0">
-              <Badge
-                dot
-                style={{ height: "10px", width: "10px" }}
-                color="green"
-                offset={[-5, 50]}
-              >
-                <Avatar
-                  size={55}
-                  icon={<UserOutlined />}
-                  className="hover:scale-105 transition-transform"
-                />
-              </Badge>
+            <div key={user?.id} className="flex-shrink-0 ">
+              <div className="flex justify-center">
+                <Badge
+                  dot
+                  style={{ height: "10px", width: "10px" }}
+                  color="green"
+                  offset={[-5, 50]}
+                >
+                  <Avatar
+                    size={55}
+                    icon={<UserOutlined />}
+                    className="hover:scale-105 transition-transform mx-auto"
+                  />
+                </Badge>
+              </div>
               <p className="text-sm mt-3 font-poppins">{user?.name}</p>
             </div>
           ))}

@@ -1,7 +1,8 @@
+import { TChatRoom } from "@/app/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface TChatSlice {
-  userChat: object | null;
+  userChat: TChatRoom | null;
 }
 
 const initialState: TChatSlice = {
