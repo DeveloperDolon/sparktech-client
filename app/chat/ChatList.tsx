@@ -35,6 +35,15 @@ const ChatList = () => {
     sliderRef.current.scrollLeft = scrollLeft - walk;
   };
 
+  const setChatRoom = async (userId: string) => {
+    try{
+
+      
+
+    } catch (err) {
+      console.log(err);
+    }
+  }
   return (
     <div className="h-screen px-10 pt-12 border-l border-gray-200">
       <h1 className="md:text-4xl sm:text-3xl text-2xl font-semibold">Chat</h1>
@@ -62,7 +71,7 @@ const ChatList = () => {
           onMouseMove={handleMouseMove}
         >
           {users?.map((user: TUser) => (
-            <div key={user?.id} className="flex-shrink-0 ">
+            <div onClick={() => setChatRoom(user?.id as string)} key={user?.id} className="flex-shrink-0 ">
               <div className="flex justify-center">
                 <Badge
                   dot
