@@ -1,22 +1,30 @@
 import { TUser } from "../signup/SignupForm";
 
 export type TSignUpUser = {
-    password: string;
-    user: {
-        name: string;
-        email: string;
-    }
-}
+  password: string;
+  user: {
+    name: string;
+    email: string;
+  };
+};
 
 export type TLoginUser = {
-    email: string;
-    password: string;
-}
+  email: string;
+  password: string;
+};
 
 export type TChatRoom = {
   id?: string;
   name?: string;
   users: string[] | TUser[];
-  messages: string[];
+  messages: TMessage[];
   isGroup: boolean;
-}
+};
+
+export type TMessage = {
+  id?: string;
+  content: string;
+  chatRoom: string;
+  receiverId: string;
+  sender: string;
+};

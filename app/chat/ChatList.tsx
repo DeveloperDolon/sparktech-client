@@ -43,7 +43,7 @@ const ChatList = () => {
   const handleChatRoom = async (userId: string) => {
     try {
       const result: {data: TChatRoom} = await createChatroom({ userId }).unwrap();
-
+      
       dispatch(setUserChat(result?.data));
     } catch (err) {
       console.log(err);
