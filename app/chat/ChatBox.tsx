@@ -33,11 +33,13 @@ const ChatBox = () => {
     (item: TUser) => item.id !== user?.id
   );
 
-  const [messages, setMessages] = useState<TMessage[]>(
-    userChat?.messages ?? []
-  );
-
+  const [messages, setMessages] = useState<TMessage[]>([]);
+  
   useEffect(() => {
+    if (userChat?.messages) {
+      setMessages(userChat?.messages as TMessage[]);
+    }
+
     if (user?.id && !socketRef.current) {
       socketRef.current = io("http://localhost:3005", {
         query: {
@@ -65,7 +67,7 @@ const ChatBox = () => {
         socketRef.current = null;
       }
     };
-  }, [user?.id]);
+  }, [user?.id, userChat?.id]);
 
   const handleSendMessage = async (data: SendMessageEvent): Promise<void> => {
     try {
