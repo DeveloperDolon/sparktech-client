@@ -17,6 +17,7 @@ import { onlineUsers } from "../store/features/authSlice";
 import { TUser } from "../signup/SignupForm";
 import { TMessage } from "../types";
 import Message from "./Message";
+import "./style.css";
 
 interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement & {
@@ -70,6 +71,12 @@ const ChatBox = () => {
       }
     };
   }, [user?.id]);
+
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSendMessage = async (data: SendMessageEvent): Promise<void> => {
     try {
@@ -159,8 +166,8 @@ const ChatBox = () => {
           </Header>
 
           <div className="flex flex-col h-full mt-5">
-            <div className="flex-1/2 px-[20px] h-full">
-              <div className="flex flex-col gap-4 h-full overflow-y-auto">
+            <div className="flex-1 px-[20px] h-0 flex flex-col">
+              <div className="flex-1 flex flex-col gap-4 overflow-y-auto hide-scrollbar">
                 {messages?.map((message, idx) => (
                   <Message
                     key={idx}
@@ -168,6 +175,7 @@ const ChatBox = () => {
                     isSender={user?.id === message?.sender}
                   />
                 ))}
+                <div ref={bottomRef} />
               </div>
             </div>
 
