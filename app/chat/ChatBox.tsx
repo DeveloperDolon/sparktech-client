@@ -26,10 +26,13 @@ interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
 
 const ChatBox = () => {
   const user = useSelector((state: RootState) => state.auth.user);
+  const userChat = useSelector((state: RootState) => state.chat.userChat);
   const socketRef = useRef<Socket | null>(null);
   const dispatch = useDispatch();
+  const chatUser = (userChat?.users as TUser[])?.find((item: TUser) => item.id !== user?.id);
 
   useEffect(() => {
+
     if (user?.id && !socketRef.current) {
       socketRef.current = io("http://localhost:3005", {
         query: {
@@ -58,7 +61,7 @@ const ChatBox = () => {
       }
     };
   }, [user?.id]);
-
+  
   const handleSendMessage = async (data: SendMessageEvent): Promise<void> => {
     try {
       data.preventDefault();
@@ -98,7 +101,7 @@ const ChatBox = () => {
             </Badge>
 
             <div>
-              <h4 className="text-lg font-semibold">Jason Susanto</h4>
+              <h4 className="text-lg font-semibold">{chatUser?.name}</h4>
 
               <p className="text-sm text-[#F1674A]">Typing...</p>
             </div>

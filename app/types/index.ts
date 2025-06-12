@@ -1,3 +1,5 @@
+import { TUser } from "../signup/SignupForm";
+
 export type TSignUpUser = {
     password: string;
     user: {
@@ -14,7 +16,7 @@ export type TLoginUser = {
 export type TChatRoom = {
   id?: string;
   name?: string;
-  users: string[];
+  users: string[] | TUser[];
   messages: string[];
   isGroup: boolean;
 }
