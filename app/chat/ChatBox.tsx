@@ -34,12 +34,14 @@ const ChatBox = () => {
   );
 
   const [messages, setMessages] = useState<TMessage[]>([]);
-  
+
   useEffect(() => {
     if (userChat?.messages) {
       setMessages(userChat?.messages as TMessage[]);
     }
+  }, [userChat?.messages]);
 
+  useEffect(() => {
     if (user?.id && !socketRef.current) {
       socketRef.current = io("http://localhost:3005", {
         query: {
@@ -67,7 +69,7 @@ const ChatBox = () => {
         socketRef.current = null;
       }
     };
-  }, [user?.id, userChat?.id]);
+  }, [user?.id]);
 
   const handleSendMessage = async (data: SendMessageEvent): Promise<void> => {
     try {
