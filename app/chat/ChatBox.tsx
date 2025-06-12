@@ -93,14 +93,13 @@ const ChatBox = () => {
             sender: user?.id ?? "",
           },
         ]);
-
+        data.target.message.value = "";
         socketRef.current.emit("message", {
           message,
           roomId: userChat?.id,
           authId: user?.id,
           userId: chatUser?.id,
         });
-        data.target.message.value = "";
       }
     } catch (error) {
       console.error("Error sending message:", error);
