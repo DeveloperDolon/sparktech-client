@@ -4,9 +4,13 @@ import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { TUser } from "../signup/SignupForm";
-import { useCreateChatroomMutation } from "../store/api/chatroom.api";
-import { TChatRoom } from "../types";
+import {
+  useChatroomListQuery,
+  useCreateChatroomMutation,
+} from "../store/api/chatroom.api";
+import { TChatRoom, TMessage } from "../types";
 import { setUserChat } from "../store/features/chatSlice";
+import { formatTo12HourTime } from "../utils/formatTo12HourTime";
 
 const ChatList = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -14,9 +18,11 @@ const ChatList = () => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const users = useSelector((state: RootState) => state.auth.onlineUsers);
+  const user = useSelector((state: RootState) => state.auth.user);
   const [createChatroom] = useCreateChatroomMutation();
+  const { data: chatroomList } = useChatroomListQuery(1);
   const dispatch = useDispatch();
-
+  
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!sliderRef.current) return;
     setIsDragging(true);
@@ -42,8 +48,10 @@ const ChatList = () => {
 
   const handleChatRoom = async (userId: string) => {
     try {
-      const result: {data: TChatRoom} = await createChatroom({ userId }).unwrap();
-      
+      const result: { data: TChatRoom } = await createChatroom({
+        userId,
+      }).unwrap();
+
       dispatch(setUserChat(result?.data));
     } catch (err) {
       console.log(err);
@@ -111,35 +119,60 @@ const ChatList = () => {
         <h2 className="text-xl font-semibold ">Messages</h2>
 
         <div className="mt-5 w-full space-y-8">
-          {users?.map((user) => (
-            <div key={user?.id} className="flex gap-4 cursor-pointer">
-              <Badge
-                dot
-                style={{ height: "10px", width: "10px" }}
-                color="green"
-                offset={[-5, 50]}
-              >
-                <Avatar
-                  size={55}
-                  icon={<UserOutlined />}
-                  className="hover:scale-105 transition-transform"
-                />
-              </Badge>
+          {chatroomList?.data?.map(
+            (
+              chatRoom: TChatRoom & {
+                usersData: TUser[];
+                latestMessage: (TMessage & { createdAt: Date })[];
+              }
+            ) => {
+              const chatUser = chatRoom?.usersData?.find(
+                (ctUser: TUser) =>
+                  typeof ctUser !== "string" && ctUser?.id !== user?.id
+              );
 
-              <div>
-                <h4 className="text-lg font-semibold">Jason Susanto</h4>
-                <div className={`flex gap-3 items-center`}>
-                  <div className="relative text-[#F1674A]">
-                    <CheckOutlined />
-                    <CheckOutlined className="absolute top-0.5 left-1" />
+              return (
+                <div key={chatRoom?.id} onClick={() => handleChatRoom(chatUser?.id as string)} className="flex gap-4 cursor-pointer">
+                  <Badge
+                    dot
+                    style={{ height: "10px", width: "10px" }}
+                    color="green"
+                    offset={[-5, 50]}
+                  >
+                    <Avatar
+                      size={55}
+                      icon={<UserOutlined />}
+                      className="hover:scale-105 transition-transform"
+                    />
+                  </Badge>
+
+                  <div>
+                    <h4 className="text-lg font-semibold">
+                      {(chatUser as TUser)?.name}
+                    </h4>
+                    <div className={`flex gap-3 items-center`}>
+                      <div className="relative text-[#F1674A]">
+                        <CheckOutlined />
+                        <CheckOutlined className="absolute top-0.5 left-1" />
+                      </div>
+
+                      <p className="text-sm">
+                        {chatRoom?.latestMessage[0]?.content?.length > 15
+                          ? chatRoom?.latestMessage[0]?.content.slice(0, 15) +
+                            "..."
+                          : chatRoom?.latestMessage[0]?.content}
+                      </p>
+                    </div>
                   </div>
-
-                  <p className="text-sm">Im from Bangladesh.</p>
+                  <p className="text-sm ml-auto">
+                    {formatTo12HourTime(
+                      chatRoom?.latestMessage[0]?.createdAt as Date
+                    )}
+                  </p>
                 </div>
-              </div>
-              <p className="text-sm ml-auto">10:42 PM</p>
-            </div>
-          ))}
+              );
+            }
+          )}
         </div>
       </div>
     </div>

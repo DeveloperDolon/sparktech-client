@@ -10,7 +10,13 @@ const chatroomApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["chatroom"],
     }),
+    chatroomList: builder.query({
+      query: () => ({
+        url: "/chatroom/list",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useCreateChatroomMutation } = chatroomApi;
+export const { useCreateChatroomMutation, useChatroomListQuery } = chatroomApi;
