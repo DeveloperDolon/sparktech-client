@@ -22,7 +22,7 @@ const ChatList = () => {
   const [createChatroom] = useCreateChatroomMutation();
   const { data: chatroomList } = useChatroomListQuery(1);
   const dispatch = useDispatch();
-  
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!sliderRef.current) return;
     setIsDragging(true);
@@ -132,7 +132,11 @@ const ChatList = () => {
               );
 
               return (
-                <div key={chatRoom?.id} onClick={() => handleChatRoom(chatUser?.id as string)} className="flex gap-4 cursor-pointer">
+                <div
+                  key={chatRoom?.id}
+                  onClick={() => handleChatRoom(chatUser?.id as string)}
+                  className="flex gap-4 cursor-pointer"
+                >
                   <Badge
                     dot
                     style={{ height: "10px", width: "10px" }}
