@@ -19,6 +19,7 @@ export type TChatRoom = {
   users: string[] | TUser[];
   messages: TMessage[];
   isGroup: boolean;
+  newMessage?: string;
 };
 
 export type TMessage = {

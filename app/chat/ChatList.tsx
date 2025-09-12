@@ -11,6 +11,7 @@ import {
 import { TChatRoom, TMessage } from "../types";
 import { setUserChat } from "../store/features/chatSlice";
 import { formatTo12HourTime } from "../utils/formatTo12HourTime";
+// import { io, Socket } from "socket.io-client";
 
 const ChatList = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -22,6 +23,7 @@ const ChatList = () => {
   const [createChatroom] = useCreateChatroomMutation();
   const { data: chatroomList } = useChatroomListQuery(1);
   const dispatch = useDispatch();
+  // const socketRef = useRef<Socket | null>(null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!sliderRef.current) return;
@@ -57,6 +59,39 @@ const ChatList = () => {
       console.log(err);
     }
   };
+
+  // useEffect(() => {
+  //   if (user?.id && !socketRef.current) {
+  //     socketRef.current = io("http://localhost:3005", {
+  //       query: {
+  //         userId: user.id,
+  //       },
+  //     });
+
+  //     socketRef.current.on(
+  //       "chatroom",
+  //       (data: { chatRoom: TChatRoom; newMessage: string }) => {
+  //         chatroomList.data = chatroomList?.data?.map((chatRoom: TChatRoom) => {
+  //           if (chatRoom?.id === data?.chatRoom?.id) {
+  //             return {
+  //               ...chatRoom,
+  //               newMessage: data.newMessage,
+  //             };
+  //           }
+  //           return chatRoom;
+  //         });
+  //       }
+  //     );
+
+  //     return () => {
+  //       if (socketRef.current) {
+  //         socketRef.current.disconnect();
+  //         socketRef.current = null;
+  //       }
+  //     };
+  //   }
+  // }, [user?.id]);
+
   return (
     <div className="h-screen px-10 pt-12 border-l border-gray-200">
       <h1 className="md:text-4xl sm:text-3xl text-2xl font-semibold">Chat</h1>

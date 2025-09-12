@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { onlineUsers } from "../store/features/authSlice";
 import { TUser } from "../signup/SignupForm";
-import { TMessage } from "../types";
+import { TChatRoom, TMessage } from "../types";
 import Message from "./Message";
 import "./style.css";
 
@@ -41,7 +41,7 @@ const ChatBox = () => {
       setMessages(userChat?.messages as TMessage[]);
     }
   }, [userChat?.messages]);
-
+  // Move socket initialization to a shared context or a custom hook for reuse across components.
   useEffect(() => {
     if (user?.id && !socketRef.current) {
       socketRef.current = io("http://localhost:3005", {
@@ -55,7 +55,13 @@ const ChatBox = () => {
       });
 
       socketRef.current.on("message", (data: TMessage) => {
-        setMessages((prev) => [...prev, data]);
+        if (chatUser?.id !== data.sender) {
+          setMessages((prev) => [...prev, data]);
+        }
+      });
+
+      socketRef.current.on("chatroom", (data: { chatRoom: TChatRoom, newMessage: string }) => {
+        console.log(data)
       });
 
       socketRef.current.on("getOnlineUsers", (data: { users: TUser[] }) => {
@@ -71,6 +77,16 @@ const ChatBox = () => {
       }
     };
   }, [user?.id]);
+
+  // To use socket events in another component:
+  // 1. Move socketRef and its initialization to a React context or a custom hook (e.g., useSocket).
+  // 2. In other components, use the context/hook to access the socket instance and add event listeners as needed.
+  // Example:
+  // const socket = useSocket();
+  // useEffect(() => {
+  //   socket?.on("someEvent", handler);
+  //   return () => socket?.off("someEvent", handler);
+  // }, [socket]);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
