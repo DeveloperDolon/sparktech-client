@@ -185,17 +185,26 @@ const ChatList = () => {
                     />
                   </Badge>
 
-                  <div>
-                    <h4 className="text-lg font-semibold">
-                      {(chatUser as TUser)?.name}
-                    </h4>
+                  <div className="flex-1 border-b border-gray-200 pb-3">
+                    <div className="flex justify-between items-center mb-1">
+                      <h4 className="2xl:text-lg md:text-base text-sm font-semibold">
+                        {(chatUser as TUser)?.name}
+                      </h4>
+
+                      <p className="2xl:text-sm md:text-xs text-[10px] ml-auto">
+                        {formatTo12HourTime(
+                          chatRoom?.latestMessage[0]?.createdAt as Date
+                        )}
+                      </p>
+                    </div>
+
                     <div className={`flex gap-3 items-center`}>
                       <div className="relative text-[#F1674A]">
                         <CheckOutlined />
                         <CheckOutlined className="absolute top-0.5 left-1" />
                       </div>
 
-                      <p className="text-sm">
+                      <p className="2xl:text-sm md:text-xs text-[10px]">
                         {chatRoom?.latestMessage[0]?.content?.length > 15
                           ? chatRoom?.latestMessage[0]?.content.slice(0, 15) +
                             "..."
@@ -203,11 +212,6 @@ const ChatList = () => {
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm ml-auto">
-                    {formatTo12HourTime(
-                      chatRoom?.latestMessage[0]?.createdAt as Date
-                    )}
-                  </p>
                 </div>
               );
             }
