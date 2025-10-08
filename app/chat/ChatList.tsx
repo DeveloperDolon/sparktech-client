@@ -165,7 +165,7 @@ const ChatList = () => {
                 (ctUser: TUser) =>
                   typeof ctUser !== "string" && ctUser?.id !== user?.id
               );
-
+              const dotColor = chatUser?.status === "online" ? "green" : "white";
               return (
                 <div
                   key={chatRoom?.id}
@@ -175,7 +175,7 @@ const ChatList = () => {
                   <Badge
                     dot
                     style={{ height: "10px", width: "10px" }}
-                    color="green"
+                    color={dotColor}
                     offset={[-5, 50]}
                   >
                     <Avatar
@@ -221,4 +221,5 @@ const ChatList = () => {
     </div>
   );
 };
+
 export default ChatList;
