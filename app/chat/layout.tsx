@@ -126,7 +126,7 @@ const ChatLayout = ({
   }
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Sider
         width={"120px"}
         theme="light"

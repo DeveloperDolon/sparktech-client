@@ -93,7 +93,7 @@ const ChatList = () => {
   // }, [user?.id]);
 
   return (
-    <div className="h-screen px-10 pt-12 border-l border-gray-200">
+    <div className="h-screen overflow-y-auto px-10 pt-12 border-l border-gray-200">
       <h1 className="md:text-4xl sm:text-3xl text-2xl font-semibold">Chat</h1>
 
       <Input

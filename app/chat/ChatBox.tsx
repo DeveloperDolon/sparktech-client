@@ -181,7 +181,7 @@ const ChatBox = () => {
             </div>
           </Header>
 
-          <div className="flex flex-col h-full mt-5">
+          <div className="flex flex-col h-full">
             <div className="flex-1 px-[20px] h-0 flex flex-col">
               <div className="flex-1 flex flex-col gap-4 overflow-y-auto hide-scrollbar">
                 {messages?.map((message, idx) => (
@@ -197,7 +197,7 @@ const ChatBox = () => {
 
             <form
               onSubmit={handleSendMessage}
-              className=" w-full place-self-end bg-white py-6 px-[20px]"
+              className=" w-full place-self-end bg-white py-3 px-[20px]"
             >
               <Input
                 name="message"
