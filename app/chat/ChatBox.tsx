@@ -1,4 +1,5 @@
 
+"use client";
 import { Avatar, Badge, Button, Input } from "antd";
 import { Header } from "antd/es/layout/layout";
 import {
@@ -90,7 +91,7 @@ const ChatBox = () => {
   // }, [socket]);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
-
+  const [message, setMessage] = useState("");
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -98,8 +99,7 @@ const ChatBox = () => {
   const handleSendMessage = async (data: SendMessageEvent): Promise<void> => {
     try {
       data.preventDefault();
-      const message = data.target.message.value.trim();
-
+      
       if (message && socketRef.current) {
         setMessages((prev) => [
           ...prev,
@@ -110,7 +110,7 @@ const ChatBox = () => {
             sender: user?.id ?? "",
           },
         ]);
-        data.target.message.value = "";
+        setMessage("");
         socketRef.current.emit("message", {
           message,
           roomId: userChat?.id,
@@ -202,6 +202,8 @@ const ChatBox = () => {
               <Input
                 name="message"
                 placeholder="Write a message..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 prefix={
                   <div>
                     <Button
