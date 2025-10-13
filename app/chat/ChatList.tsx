@@ -53,7 +53,7 @@ const ChatList = () => {
       const result: { data: TChatRoom } = await createChatroom({
         userId,
       }).unwrap();
-
+      
       dispatch(setUserChat(result?.data));
     } catch (err) {
       console.log(err);
@@ -122,7 +122,7 @@ const ChatList = () => {
             <div
               onClick={() => handleChatRoom(user?.id as string)}
               key={user?.id}
-              className="flex-shrink-0 "
+              className="flex-shrink-0"
             >
               <div className="flex justify-center">
                 <Badge

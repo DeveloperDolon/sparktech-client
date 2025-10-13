@@ -44,6 +44,7 @@ const ChatBox = () => {
     }
   }, [userChat?.messages]);
   // Move socket initialization to a shared context or a custom hook for reuse across components.
+
   useEffect(() => {
     if (user?.id && !socketRef.current) {
       socketRef.current = io("http://localhost:3005", {
@@ -63,7 +64,7 @@ const ChatBox = () => {
       });
 
       socketRef.current.on("chatroom", (data: { chatRoom: TChatRoom, newMessage: string }) => {
-        console.log(data)
+        console.log("This is the data collection for create chat room and new message.",data);
       });
 
       socketRef.current.on("getOnlineUsers", (data: { users: TUser[] }) => {
@@ -78,7 +79,7 @@ const ChatBox = () => {
         socketRef.current = null;
       }
     };
-  }, [user?.id]);
+  }, [user]);
 
   // To use socket events in another component:
   // 1. Move socketRef and its initialization to a React context or a custom hook (e.g., useSocket).
@@ -92,6 +93,7 @@ const ChatBox = () => {
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState("");
+  
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
