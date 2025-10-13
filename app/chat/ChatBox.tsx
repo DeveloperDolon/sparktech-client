@@ -20,6 +20,7 @@ import { TUser } from "../signup/SignupForm";
 import { TChatRoom, TMessage } from "../types";
 import Message from "./Message";
 import "./style.css";
+import { setUserChat } from "../store/features/chatSlice";
 
 interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement & {
@@ -57,14 +58,15 @@ const ChatBox = () => {
         console.log("Connected to server");
       });
 
+      socketRef.current.on("chatroom", (data: { chatRoom: TChatRoom, newMessage: string }) => {
+        console.log("This is the data collection for create chat room and new message.", data?.chatRoom);
+        dispatch(setUserChat(data?.chatRoom));
+      });
+
       socketRef.current.on("message", (data: TMessage) => {
         if (chatUser?.id !== data.sender) {
           setMessages((prev) => [...prev, data]);
         }
-      });
-
-      socketRef.current.on("chatroom", (data: { chatRoom: TChatRoom, newMessage: string }) => {
-        console.log("This is the data collection for create chat room and new message.",data);
       });
 
       socketRef.current.on("getOnlineUsers", (data: { users: TUser[] }) => {
@@ -93,7 +95,7 @@ const ChatBox = () => {
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState("");
-  
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -124,7 +126,7 @@ const ChatBox = () => {
       console.error("Error sending message:", error);
     }
   };
-
+  
   return (
     <div className="h-[calc(100vh-125px)]">
       {chatUser ? (
