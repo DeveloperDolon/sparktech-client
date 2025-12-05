@@ -19,7 +19,7 @@ const page = () => {
       </Content>
 
       <Sider theme="light" width="20%" className="hidden 2xl:block">
-        <MediaBox />
+        <MediaBox height="100vh" />
       </Sider>
     </Layout>
   );

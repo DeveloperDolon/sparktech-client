@@ -10,6 +10,8 @@ import {
   VideoCameraOutlined,
   PhoneOutlined,
   DashOutlined,
+  MediumSquareFilled,
+  CloseOutlined
 } from "@ant-design/icons";
 import { io, Socket } from "socket.io-client";
 import { useEffect, useRef, useState } from "react";
@@ -21,6 +23,7 @@ import { TChatRoom, TMessage } from "../types";
 import Message from "./Message";
 import "./style.css";
 import { setUserChat } from "../store/features/chatSlice";
+import MediaBox from "./MediaBox";
 
 interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement & {
@@ -126,9 +129,23 @@ const ChatBox = () => {
       console.error("Error sending message:", error);
     }
   };
+
+  const openMediaSection = () => {
+    const mediaSection = document.getElementById("media_section");
+    if (mediaSection) {
+      mediaSection.style.right = "0";
+    }
+  };
+
+  const closeMediaSection = () => {
+    const mediaSection = document.getElementById("media_section");
+    if (mediaSection) {
+      mediaSection.style.right = "-100%";
+    }
+  };
   
   return (
-    <div className="h-[calc(100vh-125px)]">
+    <div className="h-[calc(100vh-125px)] relative">
       {chatUser ? (
         <>
           <Header
@@ -180,6 +197,14 @@ const ChatBox = () => {
                   variant="text"
                   style={{ border: "none", fontSize: "25px" }}
                   icon={<DashOutlined />}
+                />
+
+                <Button
+                  size="large"
+                  variant="text"
+                  style={{ border: "none", fontSize: "25px" }}
+                  icon={<MediumSquareFilled />}
+                  onClick={() => openMediaSection()}
                 />
               </div>
             </div>
@@ -244,6 +269,17 @@ const ChatBox = () => {
           Select a user for chat
         </div>
       )}
+
+      <div id="media_section" className="absolute transition-all duration-500 top-0 2xl:right-[-100%] md:right-[-50%] right-[-100%] bg-white shadow-lg z-50 p-2 h-[100vh] overflow-y-scroll xl:w-[50%] w-[100%]">
+        <Button
+          type="text"
+          style={{fontSize: "20px", background: 'red', color:"white"}}
+          icon={<CloseOutlined />}
+          onClick={() => closeMediaSection()}
+        />
+
+        <MediaBox height="auto" />
+      </div>
     </div>
   );
 };
