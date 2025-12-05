@@ -4,7 +4,7 @@ import { Button, Image } from "antd";
 
 const MediaBox = () => {
   return (
-    <div className="h-[100vh] overflow-y-auto">
+    <div className="h-[100vh] overflow-y-auto 2xl:block hidden">
       <Content
         style={{
           background: "white",

@@ -18,7 +18,7 @@ const page = () => {
         <ChatBox />
       </Content>
 
-      <Sider theme="light" width="20%">
+      <Sider theme="light" width="20%" className="hidden 2xl:block">
         <MediaBox />
       </Sider>
     </Layout>
