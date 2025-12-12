@@ -9,7 +9,7 @@ import MediaBox from "./MediaBox";
 
 const page = () => {
   return (
-    <Layout>
+    <Layout className="bg-red-400">
       <Sider theme="light" width="25%">
         <ChatList />
       </Sider>
@@ -18,8 +18,8 @@ const page = () => {
         <ChatBox />
       </Content>
 
-      <Sider theme="light" width="20%">
-        <MediaBox />
+      <Sider theme="light" width="20%" className="hidden 2xl:block">
+        <MediaBox height="100vh" />
       </Sider>
     </Layout>
   );

@@ -2,9 +2,9 @@ import { Content } from "antd/es/layout/layout";
 import { RightOutlined, FileExcelFilled } from "@ant-design/icons";
 import { Button, Image } from "antd";
 
-const MediaBox = () => {
+const MediaBox = ({height}: {height: string}) => {
   return (
-    <div className="h-[calc(100vh-125px)]">
+    <div className={`h-[${height}] overflow-y-auto`}>
       <Content
         style={{
           background: "white",

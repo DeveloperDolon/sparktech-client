@@ -53,7 +53,7 @@ const ChatList = () => {
       const result: { data: TChatRoom } = await createChatroom({
         userId,
       }).unwrap();
-
+      
       dispatch(setUserChat(result?.data));
     } catch (err) {
       console.log(err);
@@ -93,7 +93,7 @@ const ChatList = () => {
   // }, [user?.id]);
 
   return (
-    <div className="h-screen px-10 pt-12 border-l border-gray-200">
+    <div className="h-screen overflow-y-auto px-10 pt-12 border-l border-gray-200">
       <h1 className="md:text-4xl sm:text-3xl text-2xl font-semibold">Chat</h1>
 
       <Input
@@ -122,7 +122,7 @@ const ChatList = () => {
             <div
               onClick={() => handleChatRoom(user?.id as string)}
               key={user?.id}
-              className="flex-shrink-0 "
+              className="flex-shrink-0"
             >
               <div className="flex justify-center">
                 <Badge

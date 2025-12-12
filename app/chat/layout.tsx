@@ -126,13 +126,14 @@ const ChatLayout = ({
   }
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Sider
         width={"120px"}
         theme="light"
         style={{
           position: "relative",
         }}
+        className="2xl:block hidden"
       >
         <div
           className="demo-logo-vertical flex justify-center items-center p-5"

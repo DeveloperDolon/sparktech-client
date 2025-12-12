@@ -1,4 +1,5 @@
 
+"use client";
 import { Avatar, Badge, Button, Input } from "antd";
 import { Header } from "antd/es/layout/layout";
 import {
@@ -9,6 +10,8 @@ import {
   VideoCameraOutlined,
   PhoneOutlined,
   DashOutlined,
+  MediumSquareFilled,
+  CloseOutlined
 } from "@ant-design/icons";
 import { io, Socket } from "socket.io-client";
 import { useEffect, useRef, useState } from "react";
@@ -19,6 +22,8 @@ import { TUser } from "../signup/SignupForm";
 import { TChatRoom, TMessage } from "../types";
 import Message from "./Message";
 import "./style.css";
+import { setUserChat } from "../store/features/chatSlice";
+import MediaBox from "./MediaBox";
 
 interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement & {
@@ -43,6 +48,7 @@ const ChatBox = () => {
     }
   }, [userChat?.messages]);
   // Move socket initialization to a shared context or a custom hook for reuse across components.
+
   useEffect(() => {
     if (user?.id && !socketRef.current) {
       socketRef.current = io("http://localhost:3005", {
@@ -55,14 +61,15 @@ const ChatBox = () => {
         console.log("Connected to server");
       });
 
+      socketRef.current.on("chatroom", (data: { chatRoom: TChatRoom, newMessage: string }) => {
+        console.log("This is the data collection for create chat room and new message.", data?.chatRoom);
+        dispatch(setUserChat(data?.chatRoom));
+      });
+
       socketRef.current.on("message", (data: TMessage) => {
         if (chatUser?.id !== data.sender) {
           setMessages((prev) => [...prev, data]);
         }
-      });
-
-      socketRef.current.on("chatroom", (data: { chatRoom: TChatRoom, newMessage: string }) => {
-        console.log(data)
       });
 
       socketRef.current.on("getOnlineUsers", (data: { users: TUser[] }) => {
@@ -77,7 +84,7 @@ const ChatBox = () => {
         socketRef.current = null;
       }
     };
-  }, [user?.id]);
+  }, [user]);
 
   // To use socket events in another component:
   // 1. Move socketRef and its initialization to a React context or a custom hook (e.g., useSocket).
@@ -90,6 +97,7 @@ const ChatBox = () => {
   // }, [socket]);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -98,8 +106,7 @@ const ChatBox = () => {
   const handleSendMessage = async (data: SendMessageEvent): Promise<void> => {
     try {
       data.preventDefault();
-      const message = data.target.message.value.trim();
-
+      
       if (message && socketRef.current) {
         setMessages((prev) => [
           ...prev,
@@ -110,7 +117,7 @@ const ChatBox = () => {
             sender: user?.id ?? "",
           },
         ]);
-        data.target.message.value = "";
+        setMessage("");
         socketRef.current.emit("message", {
           message,
           roomId: userChat?.id,
@@ -123,8 +130,22 @@ const ChatBox = () => {
     }
   };
 
+  const openMediaSection = () => {
+    const mediaSection = document.getElementById("media_section");
+    if (mediaSection) {
+      mediaSection.style.right = "0";
+    }
+  };
+
+  const closeMediaSection = () => {
+    const mediaSection = document.getElementById("media_section");
+    if (mediaSection) {
+      mediaSection.style.right = "-100%";
+    }
+  };
+  
   return (
-    <div className="h-[calc(100vh-125px)]">
+    <div className="h-[calc(100vh-125px)] relative">
       {chatUser ? (
         <>
           <Header
@@ -177,11 +198,19 @@ const ChatBox = () => {
                   style={{ border: "none", fontSize: "25px" }}
                   icon={<DashOutlined />}
                 />
+
+                <Button
+                  size="large"
+                  variant="text"
+                  style={{ border: "none", fontSize: "25px" }}
+                  icon={<MediumSquareFilled />}
+                  onClick={() => openMediaSection()}
+                />
               </div>
             </div>
           </Header>
 
-          <div className="flex flex-col h-full mt-5">
+          <div className="flex flex-col h-full">
             <div className="flex-1 px-[20px] h-0 flex flex-col">
               <div className="flex-1 flex flex-col gap-4 overflow-y-auto hide-scrollbar">
                 {messages?.map((message, idx) => (
@@ -197,11 +226,13 @@ const ChatBox = () => {
 
             <form
               onSubmit={handleSendMessage}
-              className=" w-full place-self-end bg-white py-6 px-[20px]"
+              className=" w-full place-self-end bg-white py-3 px-[20px]"
             >
               <Input
                 name="message"
                 placeholder="Write a message..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 prefix={
                   <div>
                     <Button
@@ -238,6 +269,17 @@ const ChatBox = () => {
           Select a user for chat
         </div>
       )}
+
+      <div id="media_section" className="absolute transition-all duration-500 top-0 2xl:right-[-100%] md:right-[-50%] right-[-100%] bg-white shadow-lg z-50 p-2 h-[100vh] overflow-y-scroll xl:w-[50%] w-[100%]">
+        <Button
+          type="text"
+          style={{fontSize: "20px", background: 'red', color:"white"}}
+          icon={<CloseOutlined />}
+          onClick={() => closeMediaSection()}
+        />
+
+        <MediaBox height="auto" />
+      </div>
     </div>
   );
 };
