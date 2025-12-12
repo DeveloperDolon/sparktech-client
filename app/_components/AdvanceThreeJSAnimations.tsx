@@ -5,7 +5,7 @@ import * as THREE from 'three';
 export default function AdvancedScrollAnimation() {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
-  const sceneRef = useRef(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
   const [currentSection, setCurrentSection] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -152,7 +152,7 @@ export default function AdvancedScrollAnimation() {
     let targetRotationX = 0;
     let targetRotationY = 0;
 
-    const onMouseMove = (e) => {
+    const onMouseMove = (e: MouseEvent) => {
       mouseX = (e.clientX / window.innerWidth) * 2 - 1;
       mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
       targetRotationX = mouseY * 0.3;

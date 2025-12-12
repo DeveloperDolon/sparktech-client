@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 export default function ChatLandingPage() {
-  const mountRef = useRef(null);
+  const mountRef = useRef<HTMLDivElement | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export default function ChatLandingPage() {
     let mouseX = 0;
     let mouseY = 0;
 
-    const onMouseMove = (e) => {
+    const onMouseMove = (e: MouseEvent) => {
       mouseX = (e.clientX / window.innerWidth) * 2 - 1;
       mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
     };
@@ -172,7 +172,9 @@ export default function ChatLandingPage() {
             Communicate.
           </span>
           <br />
-          Collaborate.
+          <span  style={{ textShadow: '5 5 20px oklch(62.7% 0.265 303.9)' }} className='text-black'>
+             Collaborate.
+          </span>
         </h1>
 
         {/* Subheading */}
