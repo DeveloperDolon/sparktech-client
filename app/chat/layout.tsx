@@ -133,6 +133,7 @@ const ChatLayout = ({
         style={{
           position: "relative",
         }}
+        className="2xl:block hidden"
       >
         <div
           className="demo-logo-vertical flex justify-center items-center p-5"
