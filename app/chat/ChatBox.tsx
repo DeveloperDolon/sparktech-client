@@ -1,4 +1,3 @@
-
 "use client";
 import { Avatar, Badge, Button, Input } from "antd";
 import { Header } from "antd/es/layout/layout";
@@ -11,7 +10,7 @@ import {
   PhoneOutlined,
   DashOutlined,
   MediumSquareFilled,
-  CloseOutlined
+  CloseOutlined,
 } from "@ant-design/icons";
 import { io, Socket } from "socket.io-client";
 import { useEffect, useRef, useState } from "react";
@@ -61,10 +60,16 @@ const ChatBox = () => {
         console.log("Connected to server");
       });
 
-      socketRef.current.on("chatroom", (data: { chatRoom: TChatRoom, newMessage: string }) => {
-        console.log("This is the data collection for create chat room and new message.", data?.chatRoom);
-        dispatch(setUserChat(data?.chatRoom));
-      });
+      socketRef.current.on(
+        "chatroom",
+        (data: { chatRoom: TChatRoom; newMessage: string }) => {
+          console.log(
+            "This is the data collection for create chat room and new message.",
+            data?.chatRoom
+          );
+          dispatch(setUserChat(data?.chatRoom));
+        }
+      );
 
       socketRef.current.on("message", (data: TMessage) => {
         if (chatUser?.id !== data.sender) {
@@ -106,7 +111,7 @@ const ChatBox = () => {
   const handleSendMessage = async (data: SendMessageEvent): Promise<void> => {
     try {
       data.preventDefault();
-      
+
       if (message && socketRef.current) {
         setMessages((prev) => [
           ...prev,
@@ -143,15 +148,15 @@ const ChatBox = () => {
       mediaSection.style.right = "-100%";
     }
   };
-  
+
   return (
     <div className="h-[calc(100vh-125px)] relative">
       {chatUser ? (
         <>
           <Header
+            className="!px-[20px] 2xl:!py-[25px] md:!py-[20px] !py-[10px]"
             style={{
               background: "white",
-              padding: "30px 20px",
               height: "fit-content",
             }}
           >
@@ -164,16 +169,26 @@ const ChatBox = () => {
                   offset={[-5, 50]}
                 >
                   <Avatar
-                    size={55}
+                    size={40}
                     icon={<UserOutlined />}
-                    className="hover:scale-105 transition-transform"
+                    className="
+                      hover:scale-105 
+                      transition-transform 
+                      !w-[40px] !h-[40px] 
+                      md:!w-[55px] md:!h-[55px]
+                      lg:!w-[60px] lg:!h-[60px]
+                    "
                   />
                 </Badge>
 
                 <div>
-                  <h4 className="text-lg font-semibold">{chatUser?.name}</h4>
+                  <h4 className="2xl:text-lg text-base font-semibold">
+                    {chatUser?.name}
+                  </h4>
 
-                  <p className="text-sm text-[#F1674A]">Typing...</p>
+                  <p className="2xl:text-sm text-xs text-[#F1674A]">
+                    Typing...
+                  </p>
                 </div>
               </div>
 
@@ -181,28 +196,44 @@ const ChatBox = () => {
                 <Button
                   size="large"
                   variant="text"
-                  style={{ border: "none", fontSize: "25px" }}
                   icon={<VideoCameraOutlined />}
+                  className="
+                    !border-none 
+                    !text-xl 
+                    2xl:!text-[25px]
+                  "
                 />
 
                 <Button
                   size="large"
                   variant="text"
-                  style={{ border: "none", fontSize: "25px" }}
                   icon={<PhoneOutlined />}
+                  className="
+                    !border-none 
+                    !text-xl 
+                    2xl:!text-[25px]
+                  "
                 />
 
                 <Button
                   size="large"
                   variant="text"
-                  style={{ border: "none", fontSize: "25px" }}
                   icon={<DashOutlined />}
+                  className="
+                    !border-none 
+                    !text-xl 
+                    2xl:!text-[25px]
+                  "
                 />
 
                 <Button
+                  className="
+                    2xl:!hidden 
+                    !border-none 
+                    !text-xl
+                "
                   size="large"
                   variant="text"
-                  style={{ border: "none", fontSize: "25px" }}
                   icon={<MediumSquareFilled />}
                   onClick={() => openMediaSection()}
                 />
@@ -212,7 +243,7 @@ const ChatBox = () => {
 
           <div className="flex flex-col h-full">
             <div className="flex-1 px-[20px] h-0 flex flex-col">
-              <div className="flex-1 flex flex-col gap-4 overflow-y-auto hide-scrollbar">
+              <div className="flex-1 flex flex-col gap-4 overflow-y-auto hide-scrollbar pt-5">
                 {messages?.map((message, idx) => (
                   <Message
                     key={idx}
@@ -270,10 +301,13 @@ const ChatBox = () => {
         </div>
       )}
 
-      <div id="media_section" className="absolute transition-all duration-500 top-0 2xl:right-[-100%] md:right-[-50%] right-[-100%] bg-white shadow-lg z-50 p-2 h-[100vh] overflow-y-scroll xl:w-[50%] w-[100%]">
+      <div
+        id="media_section"
+        className="absolute transition-all duration-500 top-0 2xl:right-[-100%] md:right-[-50%] right-[-100%] bg-white shadow-lg z-50 p-2 h-[100vh] overflow-y-scroll xl:w-[50%] w-[100%]"
+      >
         <Button
           type="text"
-          style={{fontSize: "20px", background: 'red', color:"white"}}
+          style={{ fontSize: "20px", background: "red", color: "white" }}
           icon={<CloseOutlined />}
           onClick={() => closeMediaSection()}
         />
