@@ -142,7 +142,7 @@ export default function ChatLandingPage() {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-slate-900 to-black">
+    <div className="relative w-full md:h-screen h-auto overflow-hidden bg-gradient-to-br from-gray-900 via-slate-900 to-black">
       {/* Three.js Canvas */}
       <div ref={mountRef} className="absolute inset-0 z-0" />
 
@@ -150,7 +150,7 @@ export default function ChatLandingPage() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60 z-10" />
 
       {/* Content */}
-      <div className={`relative z-20 flex flex-col items-center justify-center h-full px-4 transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`relative z-20 flex flex-col items-center md:mt-0 mt-36 justify-center h-full px-4 transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         {/* Logo/Brand */}
         <div className="mb-8 transform hover:scale-105 transition-transform duration-300">
           <div className="flex items-center space-x-3">
@@ -172,8 +172,11 @@ export default function ChatLandingPage() {
             Communicate.
           </span>
           <br />
-          <span  style={{ textShadow: '5 5 20px oklch(62.7% 0.265 303.9)' }} className='text-black'>
-             Collaborate.
+          <span 
+            style={{ textShadow: '5px 5px 20px oklch(62.7% 0.265 303.9)' }} 
+            className='text-black'
+          >
+            Collaborate.
           </span>
         </h1>
 
