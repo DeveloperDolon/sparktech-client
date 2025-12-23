@@ -40,6 +40,7 @@ const ChatList = () => {
     setIsDragging(false);
   };
 
+
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !sliderRef.current) return;
     e.preventDefault();
@@ -50,62 +51,55 @@ const ChatList = () => {
 
   const handleChatRoom = async (userId: string) => {
     try {
+      const chatBox = document.getElementById('chat_box');
+      const chatList = document.getElementById('chat_list');
       const result: { data: TChatRoom } = await createChatroom({
         userId,
       }).unwrap();
-      
+
       dispatch(setUserChat(result?.data));
+
+      if(chatBox?.classList.contains('hidden')) {
+        chatBox?.classList.remove('hidden');
+      }
+
+      if(!chatList?.classList.contains('hidden')) {
+        chatList?.classList.add('hidden');
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
-  // useEffect(() => {
-  //   if (user?.id && !socketRef.current) {
-  //     socketRef.current = io("http://localhost:3005", {
-  //       query: {
-  //         userId: user.id,
-  //       },
-  //     });
-
-  //     socketRef.current.on(
-  //       "chatroom",
-  //       (data: { chatRoom: TChatRoom; newMessage: string }) => {
-  //         chatroomList.data = chatroomList?.data?.map((chatRoom: TChatRoom) => {
-  //           if (chatRoom?.id === data?.chatRoom?.id) {
-  //             return {
-  //               ...chatRoom,
-  //               newMessage: data.newMessage,
-  //             };
-  //           }
-  //           return chatRoom;
-  //         });
-  //       }
-  //     );
-
-  //     return () => {
-  //       if (socketRef.current) {
-  //         socketRef.current.disconnect();
-  //         socketRef.current = null;
-  //       }
-  //     };
-  //   }
-  // }, [user?.id]);
-
   return (
     <div className="h-screen overflow-y-auto px-10 pt-12 border-l border-gray-200">
-      <h1 className="md:text-4xl sm:text-3xl text-2xl font-semibold">Chat</h1>
+      <div className="2xl:block flex items-center 2xl:gap-0 gap-5">
+        <h1 className="md:text-4xl sm:text-3xl text-xl font-semibold">Chat</h1>
 
-      <Input
-        size="large"
-        style={{
-          padding: "16px",
-          background: "#F8F8F9",
-          marginTop: "40px",
-        }}
-        placeholder="Search people or message"
-        prefix={<SearchOutlined style={{ fontSize: "25px", color: "gray" }} />}
-      />
+        <Input
+          className="
+          bg-[#F8F8F9]       
+            !p-[10px]        
+            2xl:!p-[16px]     
+            2xl:mt-[40px]   
+            !text-[15px]         
+            md:!text-[16px]      
+            2xl:!text-[20px]     
+          "
+          size="large"
+          placeholder="Search people or message"
+          prefix={
+            <SearchOutlined
+              className="
+                !text-[20px]         
+                md:!text-[22px]      
+                2xl:!text-[28px]
+                "
+              style={{ color: "gray" }}
+            />
+          }
+        />
+      </div>
 
       <div className="relative">
         <h2 className="text-xl font-semibold mt-6">Online</h2>
@@ -165,7 +159,8 @@ const ChatList = () => {
                 (ctUser: TUser) =>
                   typeof ctUser !== "string" && ctUser?.id !== user?.id
               );
-              const dotColor = chatUser?.status === "online" ? "green" : "white";
+              const dotColor =
+                chatUser?.status === "online" ? "green" : "white";
               return (
                 <div
                   key={chatRoom?.id}

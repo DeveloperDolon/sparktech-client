@@ -10,11 +10,15 @@ import MediaBox from "./MediaBox";
 const page = () => {
   return (
     <Layout className="bg-red-400">
-      <Sider theme="light" width="25%">
+      <div id="chat_list" className="2xl:hidden block relative 2xl:w-auto w-full">
+        <ChatList />
+      </div>
+
+      <Sider theme="light" width="25%" className="hidden 2xl:block">
         <ChatList />
       </Sider>
 
-      <Content>
+      <Content id="chat_box" className="2xl:block hidden">
         <ChatBox />
       </Content>
 
