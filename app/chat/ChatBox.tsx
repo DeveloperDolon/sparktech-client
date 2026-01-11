@@ -11,6 +11,7 @@ import {
   DashOutlined,
   MediumSquareFilled,
   CloseOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 import { io, Socket } from "socket.io-client";
 import { useEffect, useRef, useState } from "react";
@@ -42,7 +43,7 @@ const ChatBox = () => {
   const [messages, setMessages] = useState<TMessage[]>([]);
 
   useEffect(() => {
-    if (userChat?.messages) {
+    if (userChat?.messages && userChat.messages.length > 0) {
       setMessages(userChat?.messages as TMessage[]);
     }
   }, [userChat?.messages]);
@@ -63,16 +64,13 @@ const ChatBox = () => {
       socketRef.current.on(
         "chatroom",
         (data: { chatRoom: TChatRoom; newMessage: string }) => {
-          console.log(
-            "This is the data collection for create chat room and new message.",
-            data?.chatRoom
-          );
           dispatch(setUserChat(data?.chatRoom));
         }
       );
 
       socketRef.current.on("message", (data: TMessage) => {
         if (chatUser?.id !== data.sender) {
+          console.log(messages, 'this is the data of messages.');
           setMessages((prev) => [...prev, data]);
         }
       });
@@ -149,6 +147,23 @@ const ChatBox = () => {
     }
   };
 
+  const goBack = async () => {
+      try {
+        const chatBox = document.getElementById('chat_box');
+        const chatList = document.getElementById('chat_list');
+  
+        if(!chatBox?.classList.contains('hidden')) {
+          chatBox?.classList.add('hidden');
+        }
+  
+        if(chatList?.classList.contains('hidden')) {
+          chatList?.classList.remove('hidden');
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
   return (
     <div className="h-[calc(100vh-125px)] relative">
       {chatUser ? (
@@ -162,6 +177,17 @@ const ChatBox = () => {
           >
             <div className="flex justify-between items-center">
               <div className="flex gap-5 items-center cursor-pointer">
+                <button
+                  className="
+                    !border-none 
+                    2xl:!hidden
+                    cursor-pointer
+                    !text-[15px]
+                  "
+                  onClick={() => goBack()}
+                >
+                  <ArrowLeftOutlined />
+                </button>
                 <Badge
                   dot
                   style={{ height: "10px", width: "10px" }}
@@ -172,7 +198,7 @@ const ChatBox = () => {
                     size={40}
                     icon={<UserOutlined />}
                     className="
-                      hover:scale-105 
+                      hover:scale-105
                       transition-transform 
                       !w-[40px] !h-[40px] 
                       md:!w-[55px] md:!h-[55px]
@@ -303,7 +329,8 @@ const ChatBox = () => {
 
       <div
         id="media_section"
-        className="absolute transition-all duration-500 top-0 2xl:right-[-100%] md:right-[-50%] right-[-100%] bg-white shadow-lg z-50 p-2 h-[100vh] overflow-y-scroll xl:w-[50%] w-[100%]"
+        className="absolute transition-all duration-500 top-0 2xl:right-[-100%] md:right-[-50%] 
+        right-[-100%] bg-white shadow-lg z-50 p-2 h-[100vh] overflow-y-scroll 2xl:w-[50%] md:w-[50%] w-[100%]"
       >
         <Button
           type="text"
