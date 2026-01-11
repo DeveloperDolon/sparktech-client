@@ -21,7 +21,7 @@ const ChatList = () => {
   const users = useSelector((state: RootState) => state.auth.onlineUsers);
   const user = useSelector((state: RootState) => state.auth.user);
   const [createChatroom] = useCreateChatroomMutation();
-  const { data: chatroomList } = useChatroomListQuery(1);
+  const { data: chatroomList, refetch } = useChatroomListQuery(1);
   const dispatch = useDispatch();
   // const socketRef = useRef<Socket | null>(null);
 
@@ -40,7 +40,6 @@ const ChatList = () => {
     setIsDragging(false);
   };
 
-
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !sliderRef.current) return;
     e.preventDefault();
@@ -58,7 +57,7 @@ const ChatList = () => {
       }).unwrap();
 
       dispatch(setUserChat(result?.data));
-
+      refetch();
       if(chatBox?.classList.contains('hidden')) {
         chatBox?.classList.remove('hidden');
       }

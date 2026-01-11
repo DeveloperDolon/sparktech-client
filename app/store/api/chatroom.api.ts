@@ -16,6 +16,12 @@ const chatroomApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getSingleChatroom: builder.query({
+      query: (chatRoomId: string) => ({
+        url: `/chatroom/${chatRoomId}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 

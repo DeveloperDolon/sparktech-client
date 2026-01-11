@@ -1,4 +1,5 @@
 "use client";
+
 import { Avatar, Badge, Button, Input } from "antd";
 import { Header } from "antd/es/layout/layout";
 import {
@@ -70,7 +71,7 @@ const ChatBox = () => {
 
       socketRef.current.on("message", (data: TMessage) => {
         if (chatUser?.id !== data.sender) {
-          console.log(messages, 'this is the data of messages.');
+          console.log(messages, "this is the data of messages.");
           setMessages((prev) => [...prev, data]);
         }
       });
@@ -148,21 +149,21 @@ const ChatBox = () => {
   };
 
   const goBack = async () => {
-      try {
-        const chatBox = document.getElementById('chat_box');
-        const chatList = document.getElementById('chat_list');
-  
-        if(!chatBox?.classList.contains('hidden')) {
-          chatBox?.classList.add('hidden');
-        }
-  
-        if(chatList?.classList.contains('hidden')) {
-          chatList?.classList.remove('hidden');
-        }
-      } catch (err) {
-        console.log(err);
+    try {
+      const chatBox = document.getElementById("chat_box");
+      const chatList = document.getElementById("chat_list");
+
+      if (!chatBox?.classList.contains("hidden")) {
+        chatBox?.classList.add("hidden");
       }
-    };
+
+      if (chatList?.classList.contains("hidden")) {
+        chatList?.classList.remove("hidden");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="h-[calc(100vh-125px)] relative">
