@@ -63,7 +63,10 @@ const ChatList = () => {
         userId,
       }).unwrap();
 
-      dispatch(setUserChat(result?.data));
+      dispatch(setUserChat({
+        ...result?.data,
+        user: user as TUser,
+      }));
       refetch();
 
       if (chatBox?.classList.contains("hidden")) {

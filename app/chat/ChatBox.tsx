@@ -17,7 +17,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { onlineUsers } from "../store/features/authSlice";
 import { TUser } from "../signup/SignupForm";
 import { TChatRoom, TMessage } from "../types";
 import Message from "./Message";
@@ -37,41 +36,49 @@ const ChatBox = () => {
   const userChat = useSelector((state: RootState) => state.chat.userChat);
   const { socket } = useChatSocket(user?.id);
   const dispatch = useDispatch();
-  const chatUser = (userChat?.users as TUser[])?.find(
-    (item: TUser) => item.id !== user?.id,
-  );
+  const chatUser = useSelector((state: RootState) => state.chat.chatUser);
 
   const [messages, setMessages] = useState<TMessage[]>([]);
 
   useEffect(() => {
-    if (userChat?.messages && userChat.messages.length > 0) {
+    if (userChat?.messages) {
       setMessages(userChat?.messages as TMessage[]);
     }
-  }, [userChat?.messages]);
+  }, [userChat?.id]);
   // Move socket initialization to a shared context or a custom hook for reuse across components.
 
   useEffect(() => {
-    if (!socket) return;
+     if (!socket || !chatUser?.id) return;
 
     socket.on(
       "chatroom",
       (data: { chatRoom: TChatRoom; newMessage: string }) => {
-        dispatch(setUserChat(data?.chatRoom));
+        if (!userChat || data?.chatRoom?.id !== userChat?.id) {
+          dispatch(
+            setUserChat({
+              ...data?.chatRoom,
+              user: user as TUser,
+            }),
+          );
+        }
         dispatch(setNewMessage(data?.newMessage));
       },
     );
 
-    socket.on("message", (data: TMessage) => {
-      if (chatUser?.id !== data.sender) {
+    const handleIncomingMessage = (data: TMessage) => {
+      if (data.sender === chatUser.id) {
+        console.log('message writing...', (data.sender === chatUser.id));
         setMessages((prev) => [...prev, data]);
       }
-    });
+    };
 
-    socket.on("getOnlineUsers", (data: { users: TUser[] }) => {
-      dispatch(onlineUsers(data?.users));
-      console.log("Online users:", data);
-    });
-  }, [socket]);
+    socket.on("message", handleIncomingMessage);
+
+    return () => {
+      socket.off("message", handleIncomingMessage);
+    };
+    
+  }, [socket, chatUser?.id]);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState("");
