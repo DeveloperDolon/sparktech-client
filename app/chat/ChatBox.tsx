@@ -14,7 +14,6 @@ import {
   CloseOutlined,
   ArrowLeftOutlined,
 } from "@ant-design/icons";
-import { io, Socket } from "socket.io-client";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
@@ -25,6 +24,7 @@ import Message from "./Message";
 import "./style.css";
 import { setUserChat } from "../store/features/chatSlice";
 import MediaBox from "./MediaBox";
+import { useChatSocket } from "../_hooks/useChatSocket";
 
 interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement & {
@@ -35,10 +35,10 @@ interface SendMessageEvent extends React.FormEvent<HTMLFormElement> {
 const ChatBox = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const userChat = useSelector((state: RootState) => state.chat.userChat);
-  const socketRef = useRef<Socket | null>(null);
+  const { socket } = useChatSocket(user?.id);
   const dispatch = useDispatch();
   const chatUser = (userChat?.users as TUser[])?.find(
-    (item: TUser) => item.id !== user?.id
+    (item: TUser) => item.id !== user?.id,
   );
 
   const [messages, setMessages] = useState<TMessage[]>([]);
@@ -51,54 +51,27 @@ const ChatBox = () => {
   // Move socket initialization to a shared context or a custom hook for reuse across components.
 
   useEffect(() => {
-    if (user?.id && !socketRef.current) {
-      socketRef.current = io("http://localhost:3005", {
-        query: {
-          userId: user.id,
-        },
-      });
+    if (!socket) return;
 
-      socketRef.current.on("connect", () => {
-        console.log("Connected to server");
-      });
+    socket.on(
+      "chatroom",
+      (data: { chatRoom: TChatRoom; newMessage: string }) => {
+        dispatch(setUserChat(data?.chatRoom));
+      },
+    );
 
-      socketRef.current.on(
-        "chatroom",
-        (data: { chatRoom: TChatRoom; newMessage: string }) => {
-          dispatch(setUserChat(data?.chatRoom));
-        }
-      );
-
-      socketRef.current.on("message", (data: TMessage) => {
-        if (chatUser?.id !== data.sender) {
-          console.log(messages, "this is the data of messages.");
-          setMessages((prev) => [...prev, data]);
-        }
-      });
-
-      socketRef.current.on("getOnlineUsers", (data: { users: TUser[] }) => {
-        dispatch(onlineUsers(data?.users));
-        console.log("Online users:", data);
-      });
-    }
-
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
+    socket.on("message", (data: TMessage) => {
+      if (chatUser?.id !== data.sender) {
+        console.log(messages, "this is the data of messages.");
+        setMessages((prev) => [...prev, data]);
       }
-    };
-  }, [user]);
+    });
 
-  // To use socket events in another component:
-  // 1. Move socketRef and its initialization to a React context or a custom hook (e.g., useSocket).
-  // 2. In other components, use the context/hook to access the socket instance and add event listeners as needed.
-  // Example:
-  // const socket = useSocket();
-  // useEffect(() => {
-  //   socket?.on("someEvent", handler);
-  //   return () => socket?.off("someEvent", handler);
-  // }, [socket]);
+    socket.on("getOnlineUsers", (data: { users: TUser[] }) => {
+      dispatch(onlineUsers(data?.users));
+      console.log("Online users:", data);
+    });
+  }, [socket]);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState("");
@@ -111,7 +84,7 @@ const ChatBox = () => {
     try {
       data.preventDefault();
 
-      if (message && socketRef.current) {
+      if (message && socket) {
         setMessages((prev) => [
           ...prev,
           {
@@ -122,7 +95,7 @@ const ChatBox = () => {
           },
         ]);
         setMessage("");
-        socketRef.current.emit("message", {
+        socket.emit("message", {
           message,
           roomId: userChat?.id,
           authId: user?.id,

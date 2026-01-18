@@ -11,22 +11,27 @@ import {
 import { TChatRoom, TMessage } from "../types";
 import { setUserChat } from "../store/features/chatSlice";
 import { formatTo12HourTime } from "../utils/formatTo12HourTime";
-// import { io, Socket } from "socket.io-client";
+import { useChatSocket } from "../_hooks/useChatSocket";
 
 const ChatList = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+
   const users = useSelector((state: RootState) => state.auth.onlineUsers);
   const user = useSelector((state: RootState) => state.auth.user);
+
   const [createChatroom] = useCreateChatroomMutation();
   const { data: chatroomList, refetch } = useChatroomListQuery(1);
   const dispatch = useDispatch();
-  // const socketRef = useRef<Socket | null>(null);
+
+  const { socket } = useChatSocket(user?.id);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!sliderRef.current) return;
+
     setIsDragging(true);
     setStartX(e.pageX - sliderRef.current.offsetLeft);
     setScrollLeft(sliderRef.current.scrollLeft);
@@ -43,6 +48,7 @@ const ChatList = () => {
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !sliderRef.current) return;
     e.preventDefault();
+
     const x = e.pageX - sliderRef.current.offsetLeft;
     const walk = (x - startX) * 2;
     sliderRef.current.scrollLeft = scrollLeft - walk;
@@ -50,20 +56,22 @@ const ChatList = () => {
 
   const handleChatRoom = async (userId: string) => {
     try {
-      const chatBox = document.getElementById('chat_box');
-      const chatList = document.getElementById('chat_list');
+      const chatBox = document.getElementById("chat_box");
+      const chatList = document.getElementById("chat_list");
+
       const result: { data: TChatRoom } = await createChatroom({
         userId,
       }).unwrap();
 
       dispatch(setUserChat(result?.data));
       refetch();
-      if(chatBox?.classList.contains('hidden')) {
-        chatBox?.classList.remove('hidden');
+
+      if (chatBox?.classList.contains("hidden")) {
+        chatBox?.classList.remove("hidden");
       }
 
-      if(!chatList?.classList.contains('hidden')) {
-        chatList?.classList.add('hidden');
+      if (!chatList?.classList.contains("hidden")) {
+        chatList?.classList.add("hidden");
       }
     } catch (err) {
       console.log(err);
@@ -152,14 +160,16 @@ const ChatList = () => {
               chatRoom: TChatRoom & {
                 usersData: TUser[];
                 latestMessage: (TMessage & { createdAt: Date })[];
-              }
+              },
             ) => {
               const chatUser = chatRoom?.usersData?.find(
                 (ctUser: TUser) =>
-                  typeof ctUser !== "string" && ctUser?.id !== user?.id
+                  typeof ctUser !== "string" && ctUser?.id !== user?.id,
               );
+
               const dotColor =
                 chatUser?.status === "online" ? "green" : "white";
+
               return (
                 <div
                   key={chatRoom?.id}
@@ -187,7 +197,7 @@ const ChatList = () => {
 
                       <p className="2xl:text-sm md:text-xs text-[10px] ml-auto">
                         {formatTo12HourTime(
-                          chatRoom?.latestMessage[0]?.createdAt as Date
+                          chatRoom?.latestMessage[0]?.createdAt as Date,
                         )}
                       </p>
                     </div>
@@ -208,7 +218,7 @@ const ChatList = () => {
                   </div>
                 </div>
               );
-            }
+            },
           )}
         </div>
       </div>
