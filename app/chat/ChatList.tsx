@@ -1,6 +1,6 @@
 import { Avatar, Badge, Input } from "antd";
 import { CheckOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { TUser } from "../signup/SignupForm";
@@ -11,15 +11,13 @@ import {
 import { TChatRoom, TMessage } from "../types";
 import { setUserChat } from "../store/features/chatSlice";
 import { formatTo12HourTime } from "../utils/formatTo12HourTime";
-import { useChatSocket } from "../_hooks/useChatSocket";
 
 const ChatList = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-
+  const newMessage = useSelector((state: RootState) => state.chat.newMessage);
   const users = useSelector((state: RootState) => state.auth.onlineUsers);
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -27,7 +25,9 @@ const ChatList = () => {
   const { data: chatroomList, refetch } = useChatroomListQuery(1);
   const dispatch = useDispatch();
 
-  const { socket } = useChatSocket(user?.id);
+  useEffect(() => {
+    refetch();
+  }, [newMessage]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!sliderRef.current) return;

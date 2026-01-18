@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface TChatSlice {
   userChat: TChatRoom | null;
+  newMessage?: string | null;
 }
 
 const initialState: TChatSlice = {
@@ -16,8 +17,11 @@ const chatSlice = createSlice({
     setUserChat(state, action: PayloadAction<TChatSlice["userChat"]>) {
       state.userChat = action.payload;
     },
+    setNewMessage(state, action: PayloadAction<TChatSlice["newMessage"]>) {
+      state.newMessage = action.payload;
+    },
   },
 });
 
-export const { setUserChat } = chatSlice.actions;
+export const { setUserChat, setNewMessage } = chatSlice.actions;
 export default chatSlice;

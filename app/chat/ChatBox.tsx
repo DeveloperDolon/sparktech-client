@@ -22,7 +22,7 @@ import { TUser } from "../signup/SignupForm";
 import { TChatRoom, TMessage } from "../types";
 import Message from "./Message";
 import "./style.css";
-import { setUserChat } from "../store/features/chatSlice";
+import { setNewMessage, setUserChat } from "../store/features/chatSlice";
 import MediaBox from "./MediaBox";
 import { useChatSocket } from "../_hooks/useChatSocket";
 
@@ -57,12 +57,12 @@ const ChatBox = () => {
       "chatroom",
       (data: { chatRoom: TChatRoom; newMessage: string }) => {
         dispatch(setUserChat(data?.chatRoom));
+        dispatch(setNewMessage(data?.newMessage));
       },
     );
 
     socket.on("message", (data: TMessage) => {
       if (chatUser?.id !== data.sender) {
-        console.log(messages, "this is the data of messages.");
         setMessages((prev) => [...prev, data]);
       }
     });
@@ -94,13 +94,14 @@ const ChatBox = () => {
             sender: user?.id ?? "",
           },
         ]);
-        setMessage("");
         socket.emit("message", {
           message,
           roomId: userChat?.id,
           authId: user?.id,
           userId: chatUser?.id,
         });
+        dispatch(setNewMessage(message));
+        setMessage("");
       }
     } catch (error) {
       console.error("Error sending message:", error);
