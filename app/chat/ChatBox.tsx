@@ -48,7 +48,7 @@ const ChatBox = () => {
   // Move socket initialization to a shared context or a custom hook for reuse across components.
 
   useEffect(() => {
-     if (!socket || !chatUser?.id) return;
+    if (!socket || !chatUser?.id) return;
 
     socket.on(
       "chatroom",
@@ -61,13 +61,22 @@ const ChatBox = () => {
             }),
           );
         }
-        dispatch(setNewMessage(data?.newMessage));
       },
     );
 
     const handleIncomingMessage = (data: TMessage) => {
       if (data.sender === chatUser.id) {
-        console.log('message writing...', (data.sender === chatUser.id));
+        console.log(
+          "incoming message received in ChatBox:",
+          data.isSeen === false && data.receiverId === user?.id && socket,
+        );
+        if (data.isSeen === false && data.receiverId === user?.id && socket) {
+          socket.emit("messageSeen", {
+            messageId: data.id as string,
+            chatRoomId: userChat?.id as string,
+          });
+        }
+        dispatch(setNewMessage(data?.content));
         setMessages((prev) => [...prev, data]);
       }
     };
@@ -77,7 +86,6 @@ const ChatBox = () => {
     return () => {
       socket.off("message", handleIncomingMessage);
     };
-    
   }, [socket, chatUser?.id]);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -99,6 +107,7 @@ const ChatBox = () => {
             chatRoom: userChat?.id ?? "",
             receiverId: chatUser?.id ?? "",
             sender: user?.id ?? "",
+            isSeen: false,
           },
         ]);
         socket.emit("message", {
@@ -252,13 +261,15 @@ const ChatBox = () => {
           <div className="flex flex-col h-full">
             <div className="flex-1 px-[20px] h-0 flex flex-col">
               <div className="flex-1 flex flex-col gap-4 overflow-y-auto hide-scrollbar pt-5">
-                {messages?.map((message, idx) => (
-                  <Message
-                    key={idx}
-                    message={message?.content}
-                    isSender={user?.id === message?.sender}
-                  />
-                ))}
+                {messages?.map((message, idx) => {
+                  return (
+                    <Message
+                      key={idx}
+                      message={message?.content}
+                      isSender={user?.id === message?.sender}
+                    />
+                  );
+                })}
                 <div ref={bottomRef} />
               </div>
             </div>

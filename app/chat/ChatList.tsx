@@ -79,6 +79,7 @@ const ChatList = () => {
           messageId: unSeenMessage.id as string,
           chatRoomId: result?.data.id as string,
         });
+        
         socket.on(
           "messageSeen",
           (data: { message: TMessage; chatRoomId: string }) => {

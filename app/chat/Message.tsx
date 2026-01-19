@@ -7,6 +7,7 @@ interface MessageProps {
 }
 
 const Message = ({ message, isSender }: MessageProps) => {
+
   return (
     <>
       {isSender ? (
