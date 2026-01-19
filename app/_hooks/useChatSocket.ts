@@ -2,9 +2,7 @@ import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import { useDispatch } from "react-redux";
 import { onlineUsers } from "../store/features/authSlice";
-import { setUserChat } from "../store/features/chatSlice";
 import { TUser } from "../signup/SignupForm";
-import { TChatRoom } from "../types";
 
 export const useChatSocket = (userId: string | undefined) => {
   const socketRef = useRef<Socket | null>(null);
@@ -18,10 +16,6 @@ export const useChatSocket = (userId: string | undefined) => {
 
     socket.on("getOnlineUsers", (data: { users: TUser[] }) => {
       dispatch(onlineUsers(data?.users));
-    });
-
-    socket.on("chatroom", (data: { chatRoom: TChatRoom; newMessage: string }) => {
-      dispatch(setUserChat(data?.chatRoom));
     });
 
     return () => {

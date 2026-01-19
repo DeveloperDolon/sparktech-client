@@ -53,7 +53,7 @@ const ChatBox = () => {
     socket.on(
       "chatroom",
       (data: { chatRoom: TChatRoom; newMessage: string }) => {
-        if (!userChat || data?.chatRoom?.id !== userChat?.id) {
+        if (!userChat) {
           dispatch(
             setUserChat({
               ...data?.chatRoom,
@@ -66,10 +66,6 @@ const ChatBox = () => {
 
     const handleIncomingMessage = (data: TMessage) => {
       if (data.sender === chatUser.id) {
-        console.log(
-          "incoming message received in ChatBox:",
-          data.isSeen === false && data.receiverId === user?.id && socket,
-        );
         if (data.isSeen === false && data.receiverId === user?.id && socket) {
           socket.emit("messageSeen", {
             messageId: data.id as string,
