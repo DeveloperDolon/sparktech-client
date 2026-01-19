@@ -74,6 +74,8 @@ const ChatBox = () => {
         }
         dispatch(setNewMessage(data?.content));
         setMessages((prev) => [...prev, data]);
+      } else {
+        dispatch(setNewMessage(data?.content));
       }
     };
 

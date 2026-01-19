@@ -3,6 +3,8 @@ import { io, Socket } from "socket.io-client";
 import { useDispatch } from "react-redux";
 import { onlineUsers } from "../store/features/authSlice";
 import { TUser } from "../signup/SignupForm";
+import { TMessage } from "../types";
+import { setNewMessage } from "../store/features/chatSlice";
 
 export const useChatSocket = (userId: string | undefined) => {
   const socketRef = useRef<Socket | null>(null);
@@ -16,6 +18,10 @@ export const useChatSocket = (userId: string | undefined) => {
 
     socket.on("getOnlineUsers", (data: { users: TUser[] }) => {
       dispatch(onlineUsers(data?.users));
+    });
+
+    socket.on("message", (data: TMessage) => {
+      dispatch(setNewMessage(data?.content));
     });
 
     return () => {
