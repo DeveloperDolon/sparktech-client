@@ -11,6 +11,7 @@ import {
 import { TChatRoom, TMessage } from "../types";
 import { setUserChat } from "../store/features/chatSlice";
 import { formatTo12HourTime } from "../utils/formatTo12HourTime";
+import { useChatSocket } from "../_hooks/useChatSocket";
 
 const ChatList = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -20,7 +21,7 @@ const ChatList = () => {
   const newMessage = useSelector((state: RootState) => state.chat.newMessage);
   const users = useSelector((state: RootState) => state.auth.onlineUsers);
   const user = useSelector((state: RootState) => state.auth.user);
-
+  const { socket } = useChatSocket(user?.id);
   const [createChatroom] = useCreateChatroomMutation();
   const { data: chatroomList, refetch } = useChatroomListQuery(1);
   const dispatch = useDispatch();
@@ -54,7 +55,10 @@ const ChatList = () => {
     sliderRef.current.scrollLeft = scrollLeft - walk;
   };
 
-  const handleChatRoom = async (userId: string) => {
+  const handleChatRoom = async (
+    userId: string,
+    unSeenMessage: TMessage | null = null,
+  ) => {
     try {
       const chatBox = document.getElementById("chat_box");
       const chatList = document.getElementById("chat_list");
@@ -63,10 +67,32 @@ const ChatList = () => {
         userId,
       }).unwrap();
 
-      dispatch(setUserChat({
-        ...result?.data,
-        user: user as TUser,
-      }));
+      dispatch(
+        setUserChat({
+          ...result?.data,
+          user: user as TUser,
+        }),
+      );
+
+      if (unSeenMessage && socket) {
+        socket.emit("messageSeen", {
+          messageId: unSeenMessage.id as string,
+          chatRoomId: result?.data.id as string,
+        });
+        socket.on(
+          "messageSeen",
+          (data: { message: TMessage; chatRoomId: string }) => {
+            chatroomList?.data?.forEach((chatRoom: TChatRoom) => {
+              if (chatRoom.id === data.chatRoomId) {
+                chatRoom.messages = chatRoom.messages.map((msg: TMessage) =>
+                  msg.id === data.message.id ? data?.message : msg,
+                );
+              }
+            });
+          },
+        );
+      }
+
       refetch();
 
       if (chatBox?.classList.contains("hidden")) {
@@ -157,7 +183,7 @@ const ChatList = () => {
       <div className="mt-7">
         <h2 className="text-xl font-semibold ">Messages</h2>
 
-        <div className="mt-5 w-full space-y-8">
+        <div className="mt-5 w-full space-y-5">
           {chatroomList?.data?.map(
             (
               chatRoom: TChatRoom & {
@@ -173,11 +199,21 @@ const ChatList = () => {
               const dotColor =
                 chatUser?.status === "online" ? "green" : "white";
 
+              const notSeenByReceiver =
+                !chatRoom?.latestMessage[0]?.isSeen &&
+                chatRoom?.latestMessage[0]?.receiverId === user?.id;
               return (
                 <div
                   key={chatRoom?.id}
-                  onClick={() => handleChatRoom(chatUser?.id as string)}
-                  className="flex gap-4 cursor-pointer"
+                  onClick={() =>
+                    handleChatRoom(
+                      chatUser?.id as string,
+                      chatRoom?.latestMessage[0]?.isSeen
+                        ? null
+                        : chatRoom?.latestMessage[0],
+                    )
+                  }
+                  className={`flex gap-4 cursor-pointer ${notSeenByReceiver ? "bg-gray-100" : ""}`}
                 >
                   <Badge
                     dot
@@ -211,11 +247,30 @@ const ChatList = () => {
                         <CheckOutlined className="absolute top-0.5 left-1" />
                       </div>
 
-                      <p className="2xl:text-sm md:text-xs text-[10px]">
-                        {chatRoom?.latestMessage[0]?.content?.length > 15
-                          ? chatRoom?.latestMessage[0]?.content.slice(0, 15) +
-                            "..."
-                          : chatRoom?.latestMessage[0]?.content}
+                      <p
+                        className={`2xl:text-sm md:text-xs text-[10px] w-full`}
+                      >
+                        {chatRoom?.latestMessage[0]?.content?.length > 15 ? (
+                          chatRoom?.latestMessage[0]?.content.slice(0, 15) +
+                          "..."
+                        ) : (
+                          <span
+                            className={
+                              notSeenByReceiver
+                                ? "flex text-black font-bold w-full justify-between items-center"
+                                : "text-gray-500"
+                            }
+                          >
+                            {chatRoom?.latestMessage[0]?.content}
+                            <span
+                              className={
+                                notSeenByReceiver
+                                  ? "inline-block 2xl:h-2 2xl:w-2 h-1 w-1 bg-red-500 rounded-full"
+                                  : ""
+                              }
+                            />
+                          </span>
+                        )}
                       </p>
                     </div>
                   </div>

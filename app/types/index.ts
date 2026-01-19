@@ -28,4 +28,5 @@ export type TMessage = {
   chatRoom: string;
   receiverId: string;
   sender: string;
+  isSeen: boolean;
 };
