@@ -1,6 +1,6 @@
 import { Avatar, Badge, Input } from "antd";
 import { CheckOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { TUser } from "../signup/SignupForm";
@@ -55,6 +55,19 @@ const ChatList = () => {
     sliderRef.current.scrollLeft = scrollLeft - walk;
   };
 
+  const handleMessageSeen = useCallback(
+    () => (data: { message: TMessage; chatRoomId: string }) => {
+      chatroomList?.data?.forEach((chatRoom: TChatRoom) => {
+        if (chatRoom.id === data.chatRoomId) {
+          chatRoom.messages = chatRoom.messages.map((msg: TMessage) =>
+            msg.id === data.message.id ? data?.message : msg,
+          );
+        }
+      });
+    },
+    [chatroomList?.data],
+  );
+
   const handleChatRoom = async (
     userId: string,
     unSeenMessage: TMessage | null = null,
@@ -79,19 +92,8 @@ const ChatList = () => {
           messageId: unSeenMessage.id as string,
           chatRoomId: result?.data.id as string,
         });
-        
-        socket.on(
-          "messageSeen",
-          (data: { message: TMessage; chatRoomId: string }) => {
-            chatroomList?.data?.forEach((chatRoom: TChatRoom) => {
-              if (chatRoom.id === data.chatRoomId) {
-                chatRoom.messages = chatRoom.messages.map((msg: TMessage) =>
-                  msg.id === data.message.id ? data?.message : msg,
-                );
-              }
-            });
-          },
-        );
+
+        socket.on("messageSeen", handleMessageSeen);
       }
 
       refetch();
@@ -118,7 +120,7 @@ const ChatList = () => {
           bg-[#F8F8F9]       
             !p-[10px]        
             2xl:!p-[16px]     
-            2xl:mt-[40px]   
+            2xl:mt-[40px]
             !text-[15px]         
             md:!text-[16px]      
             2xl:!text-[20px]     

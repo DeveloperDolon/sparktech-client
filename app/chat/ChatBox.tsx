@@ -14,7 +14,7 @@ import {
   CloseOutlined,
   ArrowLeftOutlined,
 } from "@ant-design/icons";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { TUser } from "../signup/SignupForm";
@@ -40,6 +40,20 @@ const ChatBox = () => {
 
   const [messages, setMessages] = useState<TMessage[]>([]);
 
+  const handleChatRoom = useCallback(
+    (data: { chatRoom: TChatRoom; newMessage: string }) => {
+      if (!userChat) {
+        dispatch(
+          setUserChat({
+            user: user as TUser,
+            ...data?.chatRoom,
+          }),
+        );
+      }
+    },
+    [dispatch, user, userChat],
+  );
+
   useEffect(() => {
     if (userChat?.messages) {
       setMessages(userChat?.messages as TMessage[]);
@@ -49,20 +63,6 @@ const ChatBox = () => {
 
   useEffect(() => {
     if (!socket || !chatUser?.id) return;
-
-    socket.on(
-      "chatroom",
-      (data: { chatRoom: TChatRoom; newMessage: string }) => {
-        if (!userChat) {
-          dispatch(
-            setUserChat({
-              ...data?.chatRoom,
-              user: user as TUser,
-            }),
-          );
-        }
-      },
-    );
 
     const handleIncomingMessage = (data: TMessage) => {
       if (data.sender === chatUser.id) {
@@ -78,6 +78,8 @@ const ChatBox = () => {
         dispatch(setNewMessage(data?.content));
       }
     };
+
+    socket.on("chatroom", handleChatRoom);
 
     socket.on("message", handleIncomingMessage);
 
